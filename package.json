@@ -1,0 +1,53 @@
+{
+  "name": "webpack-angularity-solution",
+  "version": "0.0.1",
+  "description": "Requisite configuration and modules to build Angularity projects with Webpack",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bholloway/webpack-angularity-solution.git"
+  },
+  "keywords": [
+    "webpack",
+    "solution",
+    "angularity"
+  ],
+  "author": "bholloway",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bholloway/webpack-angularity-solution/issues"
+  },
+  "homepage": "https://github.com/bholloway/webpack-angularity-solution",
+  "dependencies": {
+    "babel-core": "^6.3.17",
+    "babel-loader": "^6.2.0",
+    "bower-webpack-plugin": "^0.1.9",
+    "browser-sync": "^2.10.1",
+    "browser-sync-webpack-plugin": "^1.0.1",
+    "chunk-manifest-webpack-plugin": "bholloway/chunk-manifest-webpack-plugin",
+    "clean-webpack-plugin": "^0.1.5",
+    "css-loader": "^0.23.0",
+    "entry-generator-webpack-plugin": "^0.0.2",
+    "esmangle-webpack-plugin": "0.0.1",
+    "exports-loader": "^0.6.2",
+    "extract-text-webpack-plugin": "^0.9.1",
+    "file-loader": "^0.8.5",
+    "glob-sync": "^0.1.0",
+    "gulp-inject-webpack-plugin": "^0.0.2",
+    "html-loader": "^0.4.0",
+    "image-webpack-loader": "^1.6.2",
+    "indexhtml-webpack-plugin": "^0.1.9",
+    "jshint": "^2.8.0",
+    "jshint-loader": "^0.8.3",
+    "json-loader": "^0.5.4",
+    "lodash.defaults": "^3.1.2",
+    "ng-annotate-loader": "^0.0.10",
+    "nginject-loader": "^2.0.0",
+    "node-sass": "^3.4.2",
+    "omit-tilde-webpack-plugin": "^0.0.8",
+    "resolve-url-loader": "^1.4.3",
+    "sass-loader": "^3.1.2",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.12.9"
+  }
+}
