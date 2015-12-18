@@ -43,9 +43,9 @@ function configFactory(options) {
     devtool      : 'source-map',
     entry        : {
       vendor: './app/vendor.js',
-      html  : !options.noApp && './app/index.html',
-      index : !options.noApp && globSync('./app/index.{js,css,scss}'),
-      test  : !options.noTest && './app/test.js'
+      html  : !options.noApp && './app/index.html' || [],
+      index : !options.noApp && globSync('./app/index.{js,css,scss}') || [],
+      test  : !options.noTest && './app/test.js' || []
     },
     output       : {
       path                                 : path.resolve('app-build'),
