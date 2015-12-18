@@ -135,7 +135,7 @@ function configFactory(options) {
     },
     plugins      : [
       // clean
-      new CleanPlugin(['app-build']),
+      new CleanPlugin('app-build', process.cwd()),
 
       // bower
       new OmitTildePlugin({
