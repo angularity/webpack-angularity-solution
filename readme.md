@@ -80,7 +80,7 @@ Create a Webpack configuration file that delegates to the `webpack-angularity-so
 /* global process:true */
 
 module.exports = require('webpack-angularity-solution')({
-    port    : process.env.MYPROJECT_PORT,
+    port    : process.env.MYPROJECT_PORT ? parseInt(process.env.MYPROJECT_PORT) : undefined,
     noApp   : process.env.MYPROJECT_NO_APP,
     noTest  : process.env.MYPROJECT_NO_TEST,
     noMinify: process.env.MYPROJECT_NO_MINIFY,
