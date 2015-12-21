@@ -84,6 +84,21 @@ module.exports = require('webpack-angularity-solution')({
 });
 ```
 
+**`.babelrc`**
+
+Create a babel-js [configuration file](https://babeljs.io/docs/usage/babelrc/) that uses the ES6 presets that you installed as a `dev-dependency`.
+
+```
+{
+  "presets": [
+    "es2015"
+  ],
+  "plugins": [
+    "add-module-exports"
+  ]
+}
+```
+
 **`karma.config.js`**
 
 Use the `karma.config.js` that comes with `webpack-angularity-solution`, also found [here](https://github.com/angularity/webpack-angularity-solution/blob/master/karma.conf.js).

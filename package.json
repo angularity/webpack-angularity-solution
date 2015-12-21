@@ -1,6 +1,6 @@
 {
   "name": "webpack-angularity-solution",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Requisite configuration and modules to build Angularity projects with Webpack",
   "main": "index.js",
   "repository": {
