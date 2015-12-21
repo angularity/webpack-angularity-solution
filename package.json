@@ -33,7 +33,7 @@
     "extract-text-webpack-plugin": "^0.9.1",
     "file-loader": "^0.8.5",
     "glob-sync": "^0.1.0",
-    "gulp-inject-webpack-plugin": "^0.0.2",
+    "gulp-inject-webpack-plugin": "^0.1.0",
     "html-loader": "^0.4.0",
     "image-webpack-loader": "^1.6.2",
     "indexhtml-webpack-plugin": "^0.1.9",
