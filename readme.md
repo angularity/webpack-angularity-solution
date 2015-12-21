@@ -49,7 +49,7 @@ nvm alias default 4.0.0
 
 ### Each project
 
-**`package.json`**
+#### `package.json`
 
 Use the following dev-dependencies and scripts in your project.
 
@@ -72,7 +72,7 @@ You may be able to omit the babel dependencies if you have not been writing ES6 
 
 Also don't forget to change **`MYPROJECT`** prefix to the name of your project to avoid environment variable crosstalk.
 
-**`webpack.conf.js`**
+#### `webpack.conf.js`
 
 Create a Webpack configuration file that delegates to the `webpack-angularity-solution` package. Use options taken from the same environment variables used in your `package.json` scripts.
 
@@ -88,7 +88,7 @@ module.exports = require('webpack-angularity-solution')({
 });
 ```
 
-**`.babelrc`**
+#### `.babelrc`
 
 Create a babel-js [configuration file](https://babeljs.io/docs/usage/babelrc/) that uses the ES6 presets that you installed as a `dev-dependency`.
 
