@@ -33,7 +33,8 @@ function configFactory(options) {
     noApp   : false,
     noTest  : false,
     noMinify: false,
-    release : false
+    release : false,
+    provide : {}
   });
 
   // additional entry points and plugins for each composition in the /app directory
@@ -160,11 +161,7 @@ function configFactory(options) {
       ]),
 
       // dependencies
-      new webpack.ProvidePlugin({
-        $              : 'jquery',
-        jQuery         : 'jquery',
-        'window.jQuery': 'jquery'
-      }),
+      new webpack.ProvidePlugin(options.provide),
 
       // output and chunking
       new ExtractTextPlugin(undefined, 'assets/[name].[contenthash].css', {

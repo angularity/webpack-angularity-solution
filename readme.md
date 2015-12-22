@@ -6,7 +6,7 @@ Requisite configuration and modules to build Angularity projects with Webpack
 
 [Angularity](http://angularity.github.io/) is an opinionated project structure for building applications in **AngularJS**.
 
-This project is a [Webpack](https://webpack.github.io/) implementation, as an alternative to the original [browserify-Sass Angularity](https://github.com/angularity/node-angularity/) implementation.
+This project is a [Webpack](https://webpack.github.io/) implementation, as an alternative to the original [Browserify-Sass Angularity](https://github.com/angularity/node-angularity/) implementation.
 
 ## Rationale
 
@@ -39,15 +39,35 @@ And additionally on Mac you may wish to set your default Node version:
 nvm alias default 4.0.0
 ```
 
-### Prerequisites
+Now install this package as a **local dev-dependency**.
+
+```
+npm install --save-dev webpack-angularity-solution
+```
+
+### Co-requisites
 
 * Install [Webpack CLI](https://github.com/webpack/docs/wiki/cli) as a **global** package using NPM.
 
-* Install [cross-env](https://www.npmjs.com/package/cross-env) as a **global** package using NPM, to allow you to write environment variables.
+	```
+	npm install -g webpack
+	```
+
+* Install [cross-env](https://www.npmjs.com/package/cross-env) as a **global** package using NPM, to allow you to write environment variables from your [NPM scripts](https://docs.npmjs.com/misc/scripts).
+
+	```
+	npm install -g cross-env
+	```
 
 * Install [karma-angularity-solution](https://github.com/angularity/karma-angularity-solution) as a **local dev-dependency** if you expect to be running Unit Tests.
 
+	```
+	npm install --save-dev karma-angularity-solution
+	```
+
 ### Each project
+
+Please read in full. Failure to configure any one of the following may leave you with a broken project.
 
 #### `package.json`
 
@@ -84,13 +104,24 @@ module.exports = require('webpack-angularity-solution')({
     noApp   : process.env.MYPROJECT_NO_APP,
     noTest  : process.env.MYPROJECT_NO_TEST,
     noMinify: process.env.MYPROJECT_NO_MINIFY,
-    release : process.env.MYPROJECT_RELEASE
+    release : process.env.MYPROJECT_RELEASE,
+	provide : {
+        $              : 'jquery',
+        jQuery         : 'jquery',
+        'window.jQuery': 'jquery'
+    }
 });
 ```
 
+Note that there are **no globals** in applications bundled by Webpack. If your code relies on globals such as jQuery, you will have to configure the `provide` option as shown above. Add additional globals as required by your application.
+
 #### `.babelrc`
 
-Create a babel-js [configuration file](https://babeljs.io/docs/usage/babelrc/) that uses the ES6 presets that you installed as a `dev-dependency`.
+If you are **compiling future Javascript** down to to current javascript you will need to configure **BabelJS** with the particulars.
+
+Angularity has traditionally supported ES6 (now es2015) so we will use that as an example. Also note that the Babel `default export` behaviour has changed so we will be use [babel-plugin-add-module-exports](https://www.npmjs.com/package/babel-plugin-add-module-exports) to retain the previous syntax.
+
+Both of these aspects were installed above as `devDependencies` so we can now create a babel-js [configuration file](https://babeljs.io/docs/usage/babelrc/) that uses them.
 
 ```
 {
@@ -124,3 +155,5 @@ For example:
 * `noMinify:boolean` Inhibit minification of the application (test build is not minified)
 
 * `release:boolean` Externalise the Webpack chunk manifest to allow long-term caching (incompatible with test build)
+
+* `provide:object` A hash of packages keyed by the global variable that they represent
