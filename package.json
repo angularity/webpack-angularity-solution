@@ -1,11 +1,11 @@
 {
   "name": "webpack-angularity-solution",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Requisite configuration and modules to build Angularity projects with Webpack",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bholloway/webpack-angularity-solution.git"
+    "url": "git+https://github.com/angularity/webpack-angularity-solution.git"
   },
   "keywords": [
     "webpack",
@@ -15,9 +15,9 @@
   "author": "bholloway",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bholloway/webpack-angularity-solution/issues"
+    "url": "https://github.com/angularity/webpack-angularity-solution/issues"
   },
-  "homepage": "https://github.com/bholloway/webpack-angularity-solution",
+  "homepage": "https://github.com/angularity/webpack-angularity-solution",
   "dependencies": {
     "babel-core": "^6.3.17",
     "babel-loader": "^6.2.0",
