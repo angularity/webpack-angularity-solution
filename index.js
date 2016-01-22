@@ -34,6 +34,7 @@ function configFactory(options) {
     noTest  : false,
     noMinify: false,
     release : false,
+    basePath: false,
     provide : {}
   });
 
@@ -51,8 +52,9 @@ function configFactory(options) {
     }),
     output       : {
       path                                 : path.resolve('app-build'),
-      filename                             : 'assets/[name].[chunkhash].js',
-      chunkFilename                        : 'assets/[name].[chunkhash].js',
+      publicPath                           : options.basePath,
+      filename                             : '[name].[chunkhash].js',
+      chunkFilename                        : '[name].[chunkhash].js',
       devtoolModuleFilenameTemplate        : '[absolute-resource-path]',
       devtoolFallbackModuleFilenameTemplate: '[absolute-resource-path]?[hash]'
     },
@@ -87,28 +89,22 @@ function configFactory(options) {
         // supported file types
         {
           test  : /\.css$/i,
-          loader: ExtractTextPlugin.extract(
-            '',
-            'css?minimize&sourceMap!resolve-url?sourceMap'
-          )
+          loader: ExtractTextPlugin.extract('css?minimize&sourceMap!resolve-url?sourceMap')
         }, {
           test  : /\.scss$/i,
-          loader: ExtractTextPlugin.extract(
-            '',
-            'css?minimize&sourceMap!resolve-url?sourceMap!sass?sourceMap'
-          )
+          loader: ExtractTextPlugin.extract('css?minimize&sourceMap!resolve-url?sourceMap!sass?sourceMap')
         }, {
           test   : /\.(jpe?g|png|gif|svg)([#?].*)?$/i,
           loaders: [
-            'file?hash=sha512&digest=hex&name=/assets/[hash].[ext]',
+            'file?hash=sha512&digest=hex&name=[hash].[ext]',
             'image-webpack?optimizationLevel=7&interlaced=false'
           ]
         }, {
           test  : /\.woff2?([#?].*)?$/i,
-          loader: 'url?limit=10000&mimetype=application/font-woff&name=/assets/[hash].[ext]'
+          loader: 'url?limit=10000&mimetype=application/font-woff&name=[hash].[ext]'
         }, {
           test  : /\.(eot|ttf|ico)([#?].*)?$/i,
-          loader: 'file?name=/assets/[hash].[ext]'
+          loader: 'file?name=[hash].[ext]'
         }, {
           test   : /\.js$/i,
           include: /[\\\/]bower_components[\\\/]/i,
@@ -164,7 +160,7 @@ function configFactory(options) {
       new webpack.ProvidePlugin(options.provide),
 
       // output and chunking
-      new ExtractTextPlugin(undefined, 'assets/[name].[contenthash].css', {
+      new ExtractTextPlugin(undefined, '[name].[contenthash].css', {
         allChunks: true
       }),
       new webpack.optimize.CommonsChunkPlugin({
