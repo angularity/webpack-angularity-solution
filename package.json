@@ -1,6 +1,6 @@
 {
   "name": "webpack-angularity-solution",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Requisite configuration and modules to build Angularity projects with Webpack",
   "main": "index.js",
   "repository": {
@@ -32,7 +32,7 @@
     "exports-loader": "^0.6.2",
     "extract-text-webpack-plugin": "^0.9.1",
     "file-loader": "^0.8.5",
-    "glob-sync": "^0.1.0",
+    "glob": "^6.0.4",
     "gulp-inject-webpack-plugin": "^0.1.0",
     "html-loader": "^0.4.0",
     "image-webpack-loader": "^1.6.2",
