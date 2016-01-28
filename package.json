@@ -1,6 +1,6 @@
 {
   "name": "webpack-angularity-solution",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Requisite configuration and modules to build Angularity projects with Webpack",
   "main": "index.js",
   "repository": {
@@ -42,7 +42,7 @@
     "json-loader": "^0.5.4",
     "lodash.defaults": "^4.0.0",
     "ng-annotate-loader": "^0.1.0",
-    "nginject-loader": "^2.0.0",
+    "nginject-loader": "^2.1.0",
     "node-sass": "^3.4.2",
     "omit-tilde-webpack-plugin": "^0.0.8",
     "resolve-url-loader": "^1.4.3",
