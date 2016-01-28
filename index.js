@@ -111,7 +111,7 @@ function configFactory(options) {
           loader : 'ng-annotate?sourceMap'
         }, {
           test   : /\.js$/i,
-          exclude: /[\\\/](bower_components|webpack-angularity-solution)[\\\/]/i,
+          exclude: /[\\\/](bower_components|webpack|css-loader)[\\\/]/i,
           loaders: [
             'ng-annotate?sourceMap',
             'nginject?sourceMap&deprecate&singleQuote',
