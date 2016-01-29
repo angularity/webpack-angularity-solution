@@ -1,6 +1,6 @@
 {
   "name": "webpack-angularity-solution",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Requisite configuration and modules to build Angularity projects with Webpack",
   "main": "index.js",
   "repository": {
@@ -27,8 +27,8 @@
     "chunk-manifest-webpack-plugin": "bholloway/chunk-manifest-webpack-plugin",
     "clean-webpack-plugin": "^0.1.7",
     "css-loader": "^0.23.1",
-    "entry-generator-webpack-plugin": "^0.0.3",
-    "esmangle-webpack-plugin": "0.0.1",
+    "entry-generator-webpack-plugin": "^0.1.0",
+    "esmangle-webpack-plugin": "^0.0.1",
     "exports-loader": "^0.6.2",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
