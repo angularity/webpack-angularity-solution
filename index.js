@@ -41,6 +41,9 @@ function configFactory(options) {
   // additional entry points and plugins for each composition in the /app directory
   var compositions = detectCompositions('./app', !options.noApp);
 
+  // determine the output directory
+  var outputDirectory = options.release ? 'app-release' : 'app-build';
+
   // create configuration
   return {
     context      : process.cwd(),
@@ -51,12 +54,12 @@ function configFactory(options) {
       test  : !options.noTest && './app/test.js' || []
     }),
     output       : {
-      path                                 : path.resolve('app-build'),
+      path                                 : path.resolve(outputDirectory),
       publicPath                           : options.basePath,
       filename                             : '[name].[chunkhash].js',
       chunkFilename                        : '[name].[chunkhash].js',
-      devtoolModuleFilenameTemplate        : '[absolute-resource-path]',
-      devtoolFallbackModuleFilenameTemplate: '[absolute-resource-path]?[hash]'
+      devtoolModuleFilenameTemplate        : '[resource-path]',
+      devtoolFallbackModuleFilenameTemplate: '[resource-path]'
     },
     resolve      : {
       alias   : {
@@ -89,10 +92,10 @@ function configFactory(options) {
         // supported file types
         {
           test  : /\.css$/i,
-          loader: ExtractTextPlugin.extract('css?minimize&sourceMap!resolve-url?sourceMap')
+          loader: ExtractTextPlugin.extract('sourcemap-sources?format=outputRelative!css?minimize&sourceMap!resolve-url?sourceMap')
         }, {
           test  : /\.scss$/i,
-          loader: ExtractTextPlugin.extract('css?minimize&sourceMap!resolve-url?sourceMap!sass?sourceMap')
+          loader: ExtractTextPlugin.extract('sourcemap-sources?format=outputRelative!css?minimize&sourceMap!resolve-url?sourceMap!sass?sourceMap')
         }, {
           test   : /\.(jpe?g|png|gif|svg)([#?].*)?$/i,
           loaders: [
@@ -108,12 +111,17 @@ function configFactory(options) {
         }, {
           test   : /\.js$/i,
           include: /[\\\/]bower_components[\\\/]/i,
-          loader : 'ng-annotate?sourceMap'
+          loaders: [
+            'sourcemap-sources?format=outputRelative',
+            'ng-annotate?sourceMap'
+          ]
         }, {
           test   : /\.js$/i,
           exclude: /[\\\/](bower_components|webpack|css-loader)[\\\/]/i,
           loaders: [
+            'sourcemap-sources?format=projectRelative',
             'ng-annotate?sourceMap',
+            'sourcemap-sources?format=absolute',  // fix ng-annotate source maps in Windows but tweaking incoming map
             'nginject?sourceMap&deprecate&singleQuote',
             'babel?sourceMap&ignore=buffer&compact=false'
             // https://github.com/feross/buffer/issues/79
@@ -133,7 +141,7 @@ function configFactory(options) {
     },
     plugins      : [
       // clean
-      new CleanPlugin('app-build', process.cwd()),
+      new CleanPlugin(outputDirectory, process.cwd()),
 
       // bower
       new OmitTildePlugin({
@@ -179,7 +187,7 @@ function configFactory(options) {
         host  : 'localhost',
         port  : options.port,
         server: {
-          baseDir: 'app-build',
+          baseDir: outputDirectory,
           routes : {'/': ''}
         },
         open  : false
