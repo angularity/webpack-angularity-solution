@@ -92,10 +92,10 @@ function configFactory(options) {
         // supported file types
         {
           test  : /\.css$/i,
-          loader: ExtractTextPlugin.extract('sourcemap-sources?format=outputRelative!css?minimize&sourceMap!resolve-url?sourceMap')
+          loader: ExtractTextPlugin.extract('css?minimize&sourceMap!resolve-url?sourceMap')
         }, {
           test  : /\.scss$/i,
-          loader: ExtractTextPlugin.extract('sourcemap-sources?format=outputRelative!css?minimize&sourceMap!resolve-url?sourceMap!sass?sourceMap')
+          loader: ExtractTextPlugin.extract('css?minimize&sourceMap!resolve-url?sourceMap!sass?sourceMap')
         }, {
           test   : /\.(jpe?g|png|gif|svg)([#?].*)?$/i,
           loaders: [
@@ -106,7 +106,7 @@ function configFactory(options) {
           test  : /\.woff2?([#?].*)?$/i,
           loader: 'url?limit=10000&mimetype=application/font-woff&name=[hash].[ext]'
         }, {
-          test  : /\.(eot|ttf|ico)([#?].*)?$/i,
+          test  : /\.(eot|ttf|ico|otf)([#?].*)?$/i,
           loader: 'file?name=[hash].[ext]'
         }, {
           test   : /\.js$/i,
@@ -141,7 +141,10 @@ function configFactory(options) {
     },
     plugins      : [
       // clean
-      new CleanPlugin(outputDirectory, process.cwd()),
+      new CleanPlugin(outputDirectory, {
+        root   : process.cwd(),
+        verbose: false
+      }),
 
       // bower
       new OmitTildePlugin({
