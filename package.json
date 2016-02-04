@@ -26,6 +26,7 @@
     "browser-sync-webpack-plugin": "^1.0.1",
     "chunk-manifest-webpack-plugin": "bholloway/chunk-manifest-webpack-plugin",
     "clean-webpack-plugin": "^0.1.7",
+    "cross-env": "^1.0.7",
     "css-loader": "^0.23.1",
     "entry-generator-webpack-plugin": "^0.2.0",
     "esmangle-webpack-plugin": "^0.0.1",
