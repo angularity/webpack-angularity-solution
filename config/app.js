@@ -26,7 +26,7 @@ function app(options) {
           addConditionals: require('./add/conditionals'),
           addMinification: require('./add/minification')
         })
-          .addCommon(path.resolve(__dirname, '..', 'node_modules'), options.globals)
+          .addCommon(path.resolve(__dirname, '..', 'node_modules'), options)
           .addClean(buildDir)
           .addComposition(composition)
           .addConditionals({

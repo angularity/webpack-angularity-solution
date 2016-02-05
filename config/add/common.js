@@ -12,18 +12,20 @@ var webpack              = require('webpack'),
  * Add common features.
  * @this {Config} A webpack-configurator instance
  * @param {string} loaderRoot The base path in which to locate loaders
- * @param {object} globals A hash of globals
+ * @param {{appDir:string, globals:object} globals A hash of options
  * @returns {Config} The given webpack-configurator instance
  */
-function common(loaderRoot, globals) {
+function common(loaderRoot, options) {
   /* jshint validthis:true */
+  var vendorEntry = path.resolve(options.appDir, 'test.js');
+
   return this
     .merge({
       context      : process.cwd(),
       cache        : true,
       devtool      : 'source-map',
       entry        : {
-        vendor: './app/vendor.js'
+        vendor: vendorEntry
       },
       output       : {
         filename                             : '[name].[chunkhash].js',
@@ -117,7 +119,7 @@ function common(loaderRoot, globals) {
 
     // bower
     .plugin('generate-vendor', EntryGeneratorPlugin, [
-      './app/vendor.js',
+      vendorEntry,
       EntryGeneratorPlugin.bowerDependenciesSource()
     ])
     .plugin('omit-tilde', OmitTildePlugin, [{
@@ -130,7 +132,7 @@ function common(loaderRoot, globals) {
     }])
 
     // globals
-    .plugin('provide', webpack.ProvidePlugin, [globals])
+    .plugin('provide', webpack.ProvidePlugin, [options.globals])
 
     // output, chunking, optimisation
     .plugin('extract-text', ExtractTextPlugin, [

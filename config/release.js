@@ -25,7 +25,7 @@ function release(options) {
     .addBrowserSync(options.releaseDir, options.port)
     .addClean(options.releaseDir)
     .addComposition(composition)
-    .addCommon(path.resolve(__dirname, '..', 'node_modules'), options.globals)
+    .addCommon(path.resolve(__dirname, '..', 'node_modules'), options)
     .addConditionals({
       TEST   : false,
       DEBUG  : false,
