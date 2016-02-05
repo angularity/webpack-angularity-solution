@@ -1,6 +1,6 @@
 {
   "name": "webpack-angularity-solution",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Requisite configuration and modules to build Angularity projects with Webpack",
   "main": "index.js",
   "repository": {
@@ -24,7 +24,7 @@
     "bower-webpack-plugin": "^0.1.9",
     "browser-sync": "^2.11.1",
     "browser-sync-webpack-plugin": "^1.0.1",
-    "chunk-manifest-webpack-plugin": "bholloway/chunk-manifest-webpack-plugin",
+    "chunk-manifest-webpack-plugin": "github:bholloway/chunk-manifest-webpack-plugin",
     "clean-webpack-plugin": "^0.1.7",
     "cross-env": "^1.0.7",
     "css-loader": "^0.23.1",
@@ -48,7 +48,10 @@
     "omit-tilde-webpack-plugin": "^0.0.8",
     "resolve-url-loader": "^1.4.3",
     "sass-loader": "^3.1.2",
+    "snake-case": "^1.1.2",
+    "sourcemap-sources-loader": "github:bholloway/sourcemap-sources-loader",
     "url-loader": "^0.5.7",
-    "webpack": "^1.12.12"
+    "webpack": "^1.12.12",
+    "webpack-configurator": "^0.3.1"
   }
 }
