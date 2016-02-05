@@ -36,7 +36,7 @@ function app(options) {
           })
           .addMinification(!options.unminified)
           .merge({
-            name  : ['app', composition.namespace].filter(Boolean).join('::'),
+            name  : ['app'].concat(composition.namespace).join('::'),
             output: {
               path: path.resolve(buildDir)
             }
