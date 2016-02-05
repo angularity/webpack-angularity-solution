@@ -5,7 +5,11 @@ var path = require('path');
 var createConfigurator = require('../lib/create-configurator'),
     listCompositions   = require('../lib/list-compositions');
 
-// TODO doctag
+/**
+ * Create a list of webpack configurators, one for each application detected.
+ * @param {{appDir:string, buildDir:string, globals:object, unminified:boolean, port:number}} options An options hash
+ * @returns {Array.<Config>} A list of configurators, one for each application detected
+ */
 function app(options) {
 
   // there may be any number of compositions in subdirectories
@@ -32,6 +36,7 @@ function app(options) {
           })
           .addMinification(!options.unminified)
           .merge({
+            name  : ['app', composition.namespace].join('::'),
             output: {
               path: path.resolve(buildDir)
             }
