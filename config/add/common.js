@@ -17,7 +17,7 @@ var webpack              = require('webpack'),
  */
 function common(loaderRoot, options) {
   /* jshint validthis:true */
-  var vendorEntry = path.resolve(options.appDir, 'test.js');
+  var vendorEntry = path.resolve(options.appDir, 'vendor.js');
 
   return this
     .merge({

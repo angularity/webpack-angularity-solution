@@ -26,8 +26,8 @@ function app(options) {
           addConditionals: require('./add/conditionals'),
           addMinification: require('./add/minification')
         })
-          .addCommon(path.resolve(__dirname, '..', 'node_modules'), options)
           .addClean(buildDir)
+          .addCommon(path.resolve(__dirname, '..', 'node_modules'), options)
           .addComposition(composition)
           .addConditionals({
             TEST   : false,
@@ -36,7 +36,7 @@ function app(options) {
           })
           .addMinification(!options.unminified)
           .merge({
-            name  : ['app', composition.namespace].join('::'),
+            name  : ['app', composition.namespace].filter(Boolean).join('::'),
             output: {
               path: path.resolve(buildDir)
             }
