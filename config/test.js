@@ -13,10 +13,12 @@ function test(options) {
   var testEntry = path.resolve(options.appDir, 'test.js');
 
   return createConfigurator({
+    addClean              : require('./add/clean'),
     addCommon             : require('./add/common'),
     addConditionals       : require('./add/conditionals'),
     addTestSuiteGeneration: require('./add/test-suite-generation')
   })
+    .addClean(options.testDir)
     .addCommon(path.resolve(__dirname, '..', 'node_modules'), options)
     .addConditionals({
       TEST   : true,

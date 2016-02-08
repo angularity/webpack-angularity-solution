@@ -19,9 +19,9 @@ function app(options) {
   function eachComposition(composition, i) {
     var buildDir = path.join(options.buildDir, composition.directory),
         config   = createConfigurator({
-          addCommon      : require('./add/common'),
           addBrowserSync : require('./add/browser-sync'),
           addClean       : require('./add/clean'),
+          addCommon      : require('./add/common'),
           addComposition : require('./add/composition'),
           addConditionals: require('./add/conditionals'),
           addMinification: require('./add/minification')
