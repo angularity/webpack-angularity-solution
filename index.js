@@ -9,7 +9,7 @@ var defaultOptions = require('./lib/default-options'),
     parseOptions   = require('./lib/parse-options');
 
 /**
- * Create a set of methods that yield webpack configurator(s).
+ * Create a set of accessors that yield webpack configurator(s).
  * @param {...object} [options] Any number of options hashes to be merged
  * @returns {{app:function, test:function, release:function, resolve:function}} A new instance
  */

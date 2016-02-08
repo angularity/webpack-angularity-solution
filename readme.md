@@ -118,7 +118,7 @@ Some explanation:
 
 	In the example you can see that more than one configuration may be passed to `angularity()`. This means `process.env` may be passed in entirety.
 
-	Angularity will automatically convert any upper-case option `SOME_OPTION` to camel-case `someOption` and parse strings to the correct type.
+	The solution will automatically convert any upper-case option `SOME_OPTION` to camel-case `someOption` and parse strings to the correct type.
 
 * **Option `globals`**
 
