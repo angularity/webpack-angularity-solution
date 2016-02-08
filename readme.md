@@ -18,9 +18,9 @@ The solution contained in this project with work with **NodeJS 4.0.0**. It is mo
 
 * This package is **not** a global installation. You need to install as a [development dependency](https://docs.npmjs.com/files/package.json#devdependencies) in every single project you wish to build.
 
-* This package does **not** contain [Karma](http://karma-runner.github.io/) and does not support Unit Testing without other pre-requisites (see below).
+* This package does **not** contain [Karma](http://karma-runner.github.io/) and does not support Unit Testing without other co-requisites (see below).
 
-* This package does **not** contain the [Webpack CLI](https://github.com/webpack/docs/wiki/cli), you will need to install separately (see below).
+* This package presumes [npm scripts](https://docs.npmjs.com/misc/scripts). If you want to run outside of scripts you will need some additional global installs (see below).
 
 ## Installation
 
@@ -47,23 +47,14 @@ npm install --save-dev webpack-angularity-solution
 
 ### Co-requisites
 
-* Install [Webpack CLI](https://github.com/webpack/docs/wiki/cli) as a **global** package using NPM.
+Install [karma-angularity-solution](https://github.com/angularity/karma-angularity-solution) as a **local dev-dependency** if you expect to be running Unit Tests.
 
-	```
-	npm install -g webpack
-	```
+```
+npm install --save-dev karma-angularity-solution
+```
 
-* Install [cross-env](https://www.npmjs.com/package/cross-env) as a **global** package using NPM, to allow you to write environment variables from your [NPM scripts](https://docs.npmjs.com/misc/scripts).
+Note that you do **not** need any global installs if you only use [npm scripts](https://docs.npmjs.com/misc/scripts). But if you operate outside of npm scripts you will find that you are missing [Webpack CLI](https://github.com/webpack/docs/wiki/cli), and [cross-env](https://www.npmjs.com/package/cross-env) as global installs.
 
-	```
-	npm install -g cross-env
-	```
-
-* Install [karma-angularity-solution](https://github.com/angularity/karma-angularity-solution) as a **local dev-dependency** if you expect to be running Unit Tests.
-
-	```
-	npm install --save-dev karma-angularity-solution
-	```
 
 ### Each project
 
@@ -74,56 +65,82 @@ Please read in full. Failure to configure any one of the following may leave you
 Use the following dev-dependencies and scripts in your project.
 
 ```json
-"scripts": {
-  "build": "webpack -d --progress",
-  "build-unminified": "cross-env MYPROJECT_NO_MINIFY=true webpack -d --progress",
-  "watch": "webpack -d --watch",
-  "watch-unminified": "cross-env MYPROJECT_NO_MINIFY=true webpack -d --watch",
-  "release": "cross-env MYPROJECT_RELEASE=true npm run build"
-},
-"devDependencies": {
-  "babel-plugin-add-module-exports": "^0.1.1",
-  "babel-preset-es2015": "^6.3.13",
-  "webpack-angularity-solution": "latest"
+{
+  "scripts": {
+    "build": "webpack -d --progress",
+    "build-unminified": "cross-env UNMINIFIED=true webpack -d --progress",
+    "watch": "webpack -d --watch",
+    "watch-unminified": "cross-env UNMINIFIED=true webpack -d --watch",
+    "release": "cross-env MODE=release webpack -d --progress"
+  },
+  "devDependencies": {
+    "webpack-angularity-solution": "latest",
+    "babel-plugin-add-module-exports": "^0.1.1",
+    "babel-preset-es2015": "^6.3.13"
+  }
 }
 ```
 
-You may be able to omit the babel dependencies if you have not been writing ES6 javascript.
+Some explanation:
 
-Also don't forget to change **`MYPROJECT`** prefix to the name of your project to avoid environment variable crosstalk.
+* **BabelJS**
 
-#### `webpack.conf.js`
+	You may be able to omit the [BabelJS](https://babeljs.io/) dependencies if you have not been writing ES6 javascript.
+
+* **cross-env**
+
+	Any setting passed to `cross-env` corresponds to environment variables. By convention they are `UPPERCASE`. These environment variables are private to the executable that follows so you don't need to worry about name conflicts across different projects.
+
+#### `webpack.config.js`
 
 Create a Webpack configuration file that delegates to the `webpack-angularity-solution` package. Use options taken from the same environment variables used in your `package.json` scripts.
 
 ```javascript
 /* global process:true */
 
-module.exports = require('webpack-angularity-solution')({
-    port    : process.env.MYPROJECT_PORT ? parseInt(process.env.MYPROJECT_PORT) : undefined,
-    noApp   : process.env.MYPROJECT_NO_APP,
-    noTest  : process.env.MYPROJECT_NO_TEST,
-    noMinify: process.env.MYPROJECT_NO_MINIFY,
-    release : process.env.MYPROJECT_RELEASE,
-	provide : {
+var angularity = require('webpack-angularity-solution');
+
+module.exports = angularity(process.env, {
+    globals: {
         $              : 'jquery',
         jQuery         : 'jquery',
         'window.jQuery': 'jquery'
     }
+}).resolve(function () {
+    /* jshint validthis:true */
+    return (process.env.MODE in this) ? this[process.env.MODE] : [].concat(this.app).concat(this.test);
 });
 ```
 
-Note that there are **no globals** in applications bundled by Webpack. If your code relies on globals such as jQuery, you will have to configure the `provide` option as shown above. Add additional globals as required by your application.
+Some explanation:
+
+* **Options by `process.env`**
+
+	In the example you can see that more than one configuration may be passed to `angularity()`. This means `process.env` may be passed in entirety.
+
+	Angularity will automatically convert any upper-case option `SOME_OPTION` to camel-case `someOption` and parse strings to the correct type.
+
+* **Option `globals`**
+
+	Note that there are **no globals** in applications bundled by Webpack. If your code relies on globals such as jQuery, you will have to configure the `globals` option as shown above.
+
+	Add additional globals as required by your application.
+
+* **The `resolve()` method**
+
+	This is pro-forma. Refer to the section on **extensability** for more detail.
+	
+	Suffice to say that valid values of the `MODE` are `app`|`test`|`release`. Omission of `MODE` implies both `app` and `test` compilations.
 
 #### `.babelrc`
 
-If you are **compiling future Javascript** down to to current javascript you will need to configure **BabelJS** with the particulars.
+If you are **compiling future Javascript** down to to current javascript you will need to configure [BabelJS](https://babeljs.io/) with the particulars.
 
-Angularity has traditionally supported ES6 (now es2015) so we will use that as an example. Also note that the Babel `default export` behaviour has changed so we will be use [babel-plugin-add-module-exports](https://www.npmjs.com/package/babel-plugin-add-module-exports) to retain the previous syntax.
+Angularity has traditionally supported ES6 (now es2015) so we will use that as an example. Also note that the Babel `default export` behaviour has changed so we will be use [babel-plugin-add-module-exports](https://www.npmjs.com/package/babel-plugin-add-module-exports) so that `require()` statements yeild the default export.
 
 Both of these aspects were installed above as `devDependencies` so we can now create a babel-js [configuration file](https://babeljs.io/docs/usage/babelrc/) that uses them.
 
-```
+```json
 {
   "presets": [
     "es2015"
@@ -144,16 +161,57 @@ For example:
 
 * run a watch using `npm run watch`
 
+* run release build using `npm run release`
+
 ### Options
+	
+#### General settings
 
-* `port:int` Optional port (that overrides `angularity.json`)
+```javascript
+port      : 55555,       // port to serve during watch
+unminified: false,       // switch to unminified
+publicPath: undefined,   // CDN path for release builds
+globals   : {}           // A hash of packages keyed by their global variable
+```
 
-* `noApp:boolean` Inhibit building the Application (speeds up the test build)
+Note that if you have an `angularity.json` file then its `port` property will be used as the default value, rather than `55555`.
 
-* `noTest:boolean` Inhibit building Unit Tests (speeds up the application build)
+#### Full customisation
 
-* `noMinify:boolean` Inhibit minification of the application (test build is not minified)
+These settings deviate from the Angularity standard project structure
 
-* `release:boolean` Externalise the Webpack chunk manifest to allow long-term caching (incompatible with test build)
+```javascript
+appDir    : './app',           // your composition roots
+buildDir  : './app-build',     // output of the app build
+testDir   : './app-test',      // output of the test build
+releaseDir: './app-release',   // output of the release build
+testGlob  : '**/*.spec.js'     // identify your test files
+```
 
-* `provide:object` A hash of packages keyed by the global variable that they represent
+## Extensability
+
+The result of `angularity()` is an instance with a number of accessors: `app`, `test`, `release`. Each accessor returns a [`webpack-configurator`](https://www.npmjs.com/package/webpack-configurator) or Array thereof.
+
+The `webpack-configurator` instance(s) provide methods for extensibility of the configuration but is not a webpack configuration until `configurator.resolve()` is called. This is done automatically by the `angularity.resolve()` method, negating the need to iterate over the configurator instance(s).
+
+```javascript
+module.exports = angularity(...)
+  .resolve(function() {
+    // this === angularity instance (i.e. this.app | this.test | this.release)
+    // return a webpack-configurator or Array.<webpack-configurator>
+  });
+```
+
+Accessors:
+
+* **`instance.app : Array.<WebpackConfigurator>`**
+
+	Retrieve a list of webpack-configurator instances, one for each application in the `appDir`.
+
+* **`instance.test : WebpackConfigurator`**
+
+	Retrieve a single webpack-configurator instance for unit tests.
+
+* **`instance.release : WebpackConfigurator`**
+
+	Retrieve a single webpack-configurator instance to release the root application in the `appDir`.

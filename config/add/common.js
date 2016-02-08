@@ -91,7 +91,7 @@ function common(loaderRoot, options) {
       test   : /\.js$/i,
       include: /[\\\/]bower_components[\\\/]/i,
       loaders: [
-        'sourcemap-sources?format=outputRelative',
+        'adjust-sourcemap?format=outputRelative',
         'ng-annotate?sourceMap'
       ]
     })
@@ -99,9 +99,9 @@ function common(loaderRoot, options) {
       test   : /\.js$/i,
       exclude: /[\\\/](bower_components|webpack|css-loader)[\\\/]/i,
       loaders: [
-        'sourcemap-sources?format=projectRelative',
+        'adjust-sourcemap?format=projectRelative',
         'ng-annotate?sourceMap',
-        'sourcemap-sources?format=absolute',  // fix ng-annotate source maps in Windows but tweaking incoming map
+        'adjust-sourcemap?format=absolute',  // fix ng-annotate source maps in Windows but tweaking incoming map
         'nginject?sourceMap&deprecate&singleQuote',
         'babel?sourceMap&ignore=buffer&compact=false'
         // https://github.com/feross/buffer/issues/79
