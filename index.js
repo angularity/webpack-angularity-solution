@@ -29,9 +29,15 @@ function configFactory(options) {
 
   // create and return the instance
   var instance = {
-    app    : require('./config/app')(opt),
-    test   : require('./config/test')(opt),
-    release: require('./config/release')(opt),
+    get app() {
+      return require('./config/app')(opt);
+    },
+    get test() {
+      return require('./config/test')(opt);
+    },
+    get release() {
+      return require('./config/release')(opt);
+    },
     resolve: resolve
   };
   return instance;
