@@ -9,10 +9,10 @@ var webpack              = require('webpack'),
     OmitTildePlugin      = require('omit-tilde-webpack-plugin');
 
 /**
- * Add common features.
+ * Add configuration common to all modes.
  * @this {Config} A webpack-configurator instance
  * @param {string} loaderRoot The base path in which to locate loaders
- * @param {{appDir:string, globals:object} globals A hash of options
+ * @param {{appDir:string, globals:object, stats:string}} options A hash of options
  * @returns {Config} The given webpack-configurator instance
  */
 function common(loaderRoot, options) {
@@ -46,7 +46,8 @@ function common(loaderRoot, options) {
       },
       node         : {
         fs: 'empty'
-      }
+      },
+      stats        : options.stats
     })
 
     // before compile

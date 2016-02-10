@@ -2,26 +2,18 @@
 
 var path = require('path');
 
-var createConfigurator = require('../lib/create-configurator'),
-    listCompositions   = require('../lib/list-compositions');
+var listCompositions = require('../lib/list-compositions');
 
 /**
  * Create a single webpack configurator for release.
+ * @param {function} configuratorFactory A factory for the webpack-configurator
  * @param {{appDir:string, releaseDir:string, globals:object, unminified:boolean, port:number}} options An options hash
  * @returns {Config} A webpack configurator
  */
-function release(options) {
+function release(configuratorFactory, options) {
   var composition = listCompositions(options.appDir)[0];
   if (composition) {
-    return createConfigurator({
-      addBrowserSync          : require('./add/browser-sync'),
-      addClean                : require('./add/clean'),
-      addCommon               : require('./add/common'),
-      addComposition          : require('./add/composition'),
-      addConditionals         : require('./add/conditionals'),
-      addExternalChunkManifest: require('./add/external-chunk-manifest'),
-      addMinification         : require('./add/minification')
-    })
+    return configuratorFactory()
       .addBrowserSync(options.releaseDir, options.port)
       .addClean(options.releaseDir)
       .addComposition(composition)

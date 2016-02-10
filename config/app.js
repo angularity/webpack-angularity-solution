@@ -2,15 +2,15 @@
 
 var path = require('path');
 
-var createConfigurator = require('../lib/create-configurator'),
-    listCompositions   = require('../lib/list-compositions');
+var listCompositions   = require('../lib/list-compositions');
 
 /**
  * Create a list of webpack configurators, one for each application detected.
+ * @param {function} configuratorFactory A factory for the webpack-configurator
  * @param {{appDir:string, buildDir:string, globals:object, unminified:boolean, port:number}} options An options hash
  * @returns {Array.<Config>} A list of configurators, one for each application detected
  */
-function app(options) {
+function app(configuratorFactory, options) {
 
   // there may be any number of compositions in subdirectories
   return listCompositions(options.appDir)
@@ -18,14 +18,7 @@ function app(options) {
 
   function eachComposition(composition, i) {
     var buildDir = path.join(options.buildDir, composition.directory),
-        config   = createConfigurator({
-          addBrowserSync : require('./add/browser-sync'),
-          addClean       : require('./add/clean'),
-          addCommon      : require('./add/common'),
-          addComposition : require('./add/composition'),
-          addConditionals: require('./add/conditionals'),
-          addMinification: require('./add/minification')
-        })
+        config   = configuratorFactory()
           .addClean(buildDir)
           .addCommon(path.resolve(__dirname, '..', 'node_modules'), options)
           .addComposition(composition)
@@ -36,7 +29,6 @@ function app(options) {
           })
           .addMinification(!options.unminified)
           .merge({
-            name  : ['app'].concat(composition.namespace).join('::'),
             output: {
               path: path.resolve(buildDir)
             }

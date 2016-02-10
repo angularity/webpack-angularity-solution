@@ -171,7 +171,22 @@ For example:
 port      : 55555,       // port to serve during watch
 unminified: false,       // switch to unminified
 publicPath: undefined,   // CDN path for release builds
-globals   : {}           // A hash of packages keyed by their global variable
+globals   : {},          // A hash of packages keyed by their global variable
+stats     : {            // console output
+  hash        : true,
+  version     : true,
+  timings     : true,
+  assets      : true,
+  chunks      : true,
+  modules     : true,
+  reasons     : true,
+  children    : true,
+  source      : true,
+  errors      : true,
+  errorDetails: true,
+  warnings    : true,
+  publicPath  : true          
+}
 ```
 
 Note that if you have an `angularity.json` file then its `port` property will be used as the default value, rather than `55555`.
@@ -188,30 +203,104 @@ releaseDir: './app-release',   // output of the release build
 testGlob  : '**/*.spec.js'     // identify your test files
 ```
 
+#### Environment variables
+
+All options may be parsed from uppercase environment variables. Use a dot to delimit depth.
+
+For example, to **suppress warnings** during the build:
+
+```json
+{
+  "scripts": {
+    "silent": "cross-env STATS.WARNINGS=false webpack -d --progress"
+    ...
+  }
+}
+```
+
 ## Extensability
 
-The result of `angularity()` is an instance with a number of accessors: `app`, `test`, `release`. Each accessor returns a [`webpack-configurator`](https://www.npmjs.com/package/webpack-configurator) or Array thereof.
+### Modes
 
-The `webpack-configurator` instance(s) provide methods for extensibility of the configuration but is not a webpack configuration until `configurator.resolve()` is called. This is done automatically by the `angularity.resolve()` method, negating the need to iterate over the configurator instance(s).
+The result of `angularity()` is an instance with a number of accessors - `app`, `test`, and `release` - corresponding to different compilation **modes**. Each accessor returns a [webpack-configurator](https://www.npmjs.com/package/webpack-configurator) or Array thereof.
+
+* **`instance.app : Array.<WebpackConfigurator>`**
+
+	Retrieve a list of `webpack-configurator` instances, one for each application in the `appDir`.
+
+* **`instance.test : WebpackConfigurator`**
+
+	Retrieve a single `webpack-configurator` instance for unit tests.
+
+* **`instance.release : WebpackConfigurator`**
+
+	Retrieve a single `webpack-configurator` instance to release the root application in the `appDir`.
+
+### Resolving
+
+While webpack-configurator provides methods for extensibility of the configuration it is not a valid webpack configuration until `configurator.resolve()` is called. This is done automatically by the `angularity.resolve()` method, negating the need to iterate over the configurator instance(s).
 
 ```javascript
 module.exports = angularity(...)
   .resolve(function() {
     // this === angularity instance (i.e. this.app | this.test | this.release)
     // return a webpack-configurator or Array.<webpack-configurator>
+	//   the .resolve() method will be called on each element returned
   });
 ```
 
-Accessors:
+### Operators
 
-* **`instance.app : Array.<WebpackConfigurator>`**
+In order to create the configurators for each **mode**, a number of additional **operators** are added to `webpack-configurator`.
 
-	Retrieve a list of webpack-configurator instances, one for each application in the `appDir`.
+The default operators include:
 
-* **`instance.test : WebpackConfigurator`**
+* `addBrowserSync(directory:string, port:number):Configurator`
 
-	Retrieve a single webpack-configurator instance for unit tests.
+	Add browser-sync server for Webpack `--watch`
+	
+* `addClean(directory:string):Configurator`
 
-* **`instance.release : WebpackConfigurator`**
+	Remove the given directory at compilation start.
 
-	Retrieve a single webpack-configurator instance to release the root application in the `appDir`.
+* `addCommon(loaderRoot:string, options:{appDir:string, globals:object, stats:string}):Configurator`
+
+	Add configuration common to all modes.
+	
+* `addComposition(item:{namespace:Array.<string>, directory:string, htmlFiles:Array, indexFiles:Array}):Configurator`
+
+	Add an application for compilation.
+	
+* `addConditionals(flags:object):Configurator`
+
+	Add compiler conditionals.
+	
+* `addExternalChunkManifest():Configurator`
+
+	Minimise changes in asset hashing by externalising the chunk manifest. Required for long term caching of assets.
+	
+* `addMinification(enabled:boolean):Configurator`
+
+	Minify javascript where enabled.
+	
+* `addTestSuiteGeneration(outputFile:string, testGlob:string):Configurator`
+
+	Locate all specification files and generate a file that require()s them all.
+	
+You may alter these operators or add your own using the `extend()` method.
+For example, if you want to re-implement the common configuration then override the `addCommon` operator:
+
+```javascript
+var oldCommon = require('webpack-angularity-solution/config/add/common');
+
+module.exports = angularity(...)
+  .extend({
+    addCommon: function(loaderRoot, options) {
+	  return oldCommon.call(this, loaderRoot, options)
+        .merge({...})
+	}
+  })
+  .resolve(function() {
+    ...
+  });
+```

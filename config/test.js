@@ -2,22 +2,16 @@
 
 var path = require('path');
 
-var createConfigurator = require('../lib/create-configurator');
-
 /**
  * Create a single webpack configurator for test.
+ * @param {function} configuratorFactory A factory for the webpack-configurator
  * @param {{appDir:string, testDir:string, globals:object, testGlob:string}} options An options hash
  * @returns {Config} A webpack configurator
  */
-function test(options) {
+function test(configuratorFactory, options) {
   var testEntry = path.resolve(options.appDir, 'test.js');
 
-  return createConfigurator({
-    addClean              : require('./add/clean'),
-    addCommon             : require('./add/common'),
-    addConditionals       : require('./add/conditionals'),
-    addTestSuiteGeneration: require('./add/test-suite-generation')
-  })
+  return configuratorFactory()
     .addClean(options.testDir)
     .addCommon(path.resolve(__dirname, '..', 'node_modules'), options)
     .addConditionals({
