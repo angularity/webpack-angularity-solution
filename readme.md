@@ -191,9 +191,28 @@ stats     : {            // console output
 
 Note that if you have an `angularity.json` file then its `port` property will be used as the default value, rather than `55555`.
 
+#### Environment variables
+
+All options may be parsed from uppercase environment variables.
+
+Use an underscrore to delimit camel-case, meaning `buildDir` is written as environment variable `BUILD_DIR`.
+ 
+Use a double underscore to delimit a nested field, meaning `stats.warnings` is written as environment variable `STATS__WARNINGS`.
+
+For example, to **suppress warnings** during the build:
+
+```json
+{
+  "scripts": {
+    "silent": "cross-env STATS__WARNINGS=false webpack -d --progress"
+    ...
+  }
+}
+```
+
 #### Full customisation
 
-These settings deviate from the Angularity standard project structure
+These additional settings may be used to deviate from Angularity's optinionated project structure.
 
 ```javascript
 appDir    : './app',           // your composition roots
@@ -203,20 +222,18 @@ releaseDir: './app-release',   // output of the release build
 testGlob  : '**/*.spec.js'     // identify your test files
 ```
 
-#### Environment variables
+### Bower
 
-All options may be parsed from uppercase environment variables. Use a dot to delimit depth.
+Bower packages may be imported like node modules but if there is a node module of the same name available then it will be used in preference.
 
-For example, to **suppress warnings** during the build:
+Inline loader statements (see shimming) cannot be used when requiring bower packages. If the package requires globals (such as jQuery) then then need to be set in the Angularity options.
 
-```json
-{
-  "scripts": {
-    "silent": "cross-env STATS.WARNINGS=false webpack -d --progress"
-    ...
-  }
-}
-```
+### Shimming
+
+If a package does not export anything, or requires some global, then it may be [shimmed](https://github.com/webpack/docs/wiki/shimming-modules) on an as-used basis.
+
+Since the **Angular** package does not export anything it would normally require the `export-loader?angular` statement to be used. However this is already taken care of in the common configuration and you do not need to take further action.
+
 
 ## Extensability
 
@@ -238,14 +255,16 @@ The result of `angularity()` is an instance with a number of accessors - `app`, 
 
 ### Resolving
 
-While webpack-configurator provides methods for extensibility of the configuration it is not a valid webpack configuration until `configurator.resolve()` is called. This is done automatically by the `angularity.resolve()` method, negating the need to iterate over the configurator instance(s).
+While [webpack-configurator](https://www.npmjs.com/package/webpack-configurator) provides methods for extensibility of the configuration it is not a valid webpack configuration until `configurator.resolve()` is called.
+
+This is done automatically by the `angularity.resolve()` method, removing the need to iterate over the (possibly numerous) configurator instances.
 
 ```javascript
 module.exports = angularity(...)
   .resolve(function() {
     // this === angularity instance (i.e. this.app | this.test | this.release)
     // return a webpack-configurator or Array.<webpack-configurator>
-	//   the .resolve() method will be called on each element returned
+    //   the .resolve() method will be called on each element returned
   });
 ```
 
@@ -253,7 +272,25 @@ module.exports = angularity(...)
 
 In order to create the configurators for each **mode**, a number of additional **operators** are added to `webpack-configurator`.
 
-The default operators include:
+You may add your own operator using the `extend()` method. Each operator is called with the current instance of the Configurator as `this` and should return the same or a new Configurator.
+
+For example, to add the `foo` operator:
+
+```javascript
+module.exports = angularity(...)
+  .extend({
+    foo: function foo() {
+      return this
+        .merge({...});  // use the fluent webpack-configurator API
+    }
+  })
+  .resolve(function () {
+    return this.test
+      .foo();  // operators are available on any Configurator instances comming out of 'test'
+  })
+```
+
+There are a number of operators used internally. These include:
 
 * `addBrowserSync(directory:string, port:number):Configurator`
 
@@ -286,21 +323,3 @@ The default operators include:
 * `addTestSuiteGeneration(outputFile:string, testGlob:string):Configurator`
 
 	Locate all specification files and generate a file that require()s them all.
-	
-You may alter these operators or add your own using the `extend()` method.
-For example, if you want to re-implement the common configuration then override the `addCommon` operator:
-
-```javascript
-var oldCommon = require('webpack-angularity-solution/config/add/common');
-
-module.exports = angularity(...)
-  .extend({
-    addCommon: function(loaderRoot, options) {
-	  return oldCommon.call(this, loaderRoot, options)
-        .merge({...})
-	}
-  })
-  .resolve(function() {
-    ...
-  });
-```

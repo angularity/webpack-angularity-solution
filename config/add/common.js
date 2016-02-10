@@ -37,8 +37,8 @@ function common(loaderRoot, options) {
         alias   : {
           npm: path.resolve('node_modules')
         },
-        root    : path.resolve('bower_components'),
-        fallback: path.resolve('node_modules')
+        root    : path.resolve('node_modules'),
+        fallback: path.resolve('bower_components')
       },
       resolveLoader: {
         root    : loaderRoot,
