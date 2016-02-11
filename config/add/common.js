@@ -19,6 +19,10 @@ function common(loaderRoot, options) {
   /* jshint validthis:true */
   var vendorEntry = path.resolve(options.appDir, 'vendor.js');
 
+  // Note that DedupePlugin causes problems when npm linked so we will ommit it from the common configuration
+  // you need to add it yourself if you wish to use it
+  //  https://github.com/webpack/karma-webpack/issues/41#issuecomment-139516692
+
   return this
     .merge({
       context      : process.cwd(),
@@ -34,15 +38,14 @@ function common(loaderRoot, options) {
         devtoolFallbackModuleFilenameTemplate: '[resource-path]?[hash]'
       },
       resolve      : {
-        alias   : {
-          npm: path.resolve('node_modules')
-        },
-        root    : path.resolve('node_modules'),
-        fallback: path.resolve('bower_components')
+        // do not use root as we want node_modules in linked projects to take precedence
+        modulesDirectories: ['node_modules', 'bower_components'],
+        fallback          : [path.resolve('node_modules'), path.resolve('bower_components')]
       },
       resolveLoader: {
-        root    : loaderRoot,
-        fallback: path.resolve('node_modules')
+        // do not use root as we want node_modules in linked projects to take precedence
+        modulesDirectories: ['node_modules'],
+        fallback          : [loaderRoot, path.resolve('node_modules')]
       },
       node         : {
         fs: 'empty'
@@ -145,7 +148,6 @@ function common(loaderRoot, options) {
       name     : 'vendor',
       minChunks: Infinity
     }])
-    .plugin('dedupe', webpack.optimize.DedupePlugin)
     .plugin('occurence-order', webpack.optimize.OccurenceOrderPlugin);
 }
 
