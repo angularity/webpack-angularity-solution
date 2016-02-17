@@ -9,6 +9,7 @@ var ESManglePlugin = require('esmangle-webpack-plugin');
  * @returns {Config} The given webpack-configurator instance
  */
 function minification(enabled) {
+  /* jshint validthis:true */
   if (enabled) {
     this
       .plugin('minification', ESManglePlugin, [

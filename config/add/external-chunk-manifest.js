@@ -9,6 +9,7 @@ var ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
  * @returns {Config} The given webpack-configurator instance
  */
 function externalChunkManifest() {
+  /* jshint validthis:true */
   return this
     .plugin('chunk-manifest', ChunkManifestPlugin);
 }

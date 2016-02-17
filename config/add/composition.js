@@ -1,7 +1,5 @@
 'use strict';
 
-var path = require('path');
-
 var IndexHTMLPlugin  = require('indexhtml-webpack-plugin'),
     GulpInjectPlugin = require('gulp-inject-webpack-plugin');
 
@@ -12,6 +10,7 @@ var IndexHTMLPlugin  = require('indexhtml-webpack-plugin'),
  * @returns {Config} The given webpack-configurator instance
  */
 function composition(item) {
+  /* jshint validthis:true */
   return this
     .merge({
       name : ['app'].concat(item.namespace).join(':'),

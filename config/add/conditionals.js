@@ -9,6 +9,7 @@ var webpack = require('webpack');
  * @returns {Config} The given webpack-configurator instance
  */
 function conditionals(flags) {
+  /* jshint validthis:true */
   return this
     .plugin('conditionals', webpack.ProvidePlugin, [flags]);
 }

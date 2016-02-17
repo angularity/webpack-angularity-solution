@@ -1,9 +1,6 @@
 'use strict';
 
-var path = require('path');
-
-var glob              = require('glob'),
-    BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 /**
  * Add browser-sync server for Webpack `--watch`.
@@ -13,6 +10,7 @@ var glob              = require('glob'),
  * @returns {Config} The given webpack-configurator instance
  */
 function browserSync(directory, port) {
+  /* jshint validthis:true */
   return this
     .plugin('browser-sync', BrowserSyncPlugin, [{
       host  : 'localhost',

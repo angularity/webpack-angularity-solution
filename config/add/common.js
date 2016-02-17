@@ -22,6 +22,7 @@ function common(loaderRoot, options) {
   // you need to add it yourself if you wish to use it
   //  https://github.com/webpack/karma-webpack/issues/41#issuecomment-139516692
 
+  /* jshint validthis:true */
   return this
     .merge({
       context      : process.cwd(),
