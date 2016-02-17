@@ -12,10 +12,9 @@ var IndexHTMLPlugin  = require('indexhtml-webpack-plugin'),
  * @returns {Config} The given webpack-configurator instance
  */
 function composition(item) {
-  /* jshint validthis:true */
   return this
     .merge({
-      name : ['app'].concat(composition.namespace).join(':'),
+      name : ['app'].concat(item.namespace).join(':'),
       entry: {
         'index-html': item.htmlFiles,
         index       : item.indexFiles

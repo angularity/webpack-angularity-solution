@@ -10,7 +10,6 @@ var EntryGeneratorPlugin = require('entry-generator-webpack-plugin');
  * @returns {Config} The given webpack-configurator instance
  */
 function testSuiteGeneration(outputFile, testGlob) {
-  /* jshint validthis:true */
   return this
     .plugin('generate-test', EntryGeneratorPlugin, [
       outputFile,

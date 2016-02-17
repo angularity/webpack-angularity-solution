@@ -16,7 +16,6 @@ var webpack              = require('webpack'),
  * @returns {Config} The given webpack-configurator instance
  */
 function common(loaderRoot, options) {
-  /* jshint validthis:true */
   var vendorEntry = path.resolve(options.appDir, 'vendor.js');
 
   // Note that DedupePlugin causes problems when npm linked so we will ommit it from the common configuration

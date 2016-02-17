@@ -13,7 +13,6 @@ var glob              = require('glob'),
  * @returns {Config} The given webpack-configurator instance
  */
 function browserSync(directory, port) {
-  /* jshint validthis:true */
   return this
     .plugin('browser-sync', BrowserSyncPlugin, [{
       host  : 'localhost',

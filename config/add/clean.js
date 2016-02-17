@@ -9,7 +9,6 @@ var CleanPlugin = require('clean-webpack-plugin');
  * @returns {Config} The given webpack-configurator instance
  */
 function clean(directory) {
-  /* jshint validthis:true */
   return this
     .plugin('clean', CleanPlugin, [
       directory,
