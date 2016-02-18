@@ -2,11 +2,12 @@
 
 var path = require('path');
 
-var webpack              = require('webpack'),
-    ExtractTextPlugin    = require('extract-text-webpack-plugin'),
-    BowerWebpackPlugin   = require('bower-webpack-plugin'),
-    EntryGeneratorPlugin = require('entry-generator-webpack-plugin'),
-    OmitTildePlugin      = require('omit-tilde-webpack-plugin');
+var webpack               = require('webpack'),
+    adjustSourcemapLoader = require('adjust-sourcemap-loader'),
+    ExtractTextPlugin     = require('extract-text-webpack-plugin'),
+    BowerWebpackPlugin    = require('bower-webpack-plugin'),
+    EntryGeneratorPlugin  = require('entry-generator-webpack-plugin'),
+    OmitTildePlugin       = require('omit-tilde-webpack-plugin');
 
 /**
  * Add configuration common to all modes.
@@ -16,7 +17,10 @@ var webpack              = require('webpack'),
  * @returns {Config} The given webpack-configurator instance
  */
 function common(loaderRoot, options) {
-  var vendorEntry = path.resolve(options.appDir, 'vendor.js');
+  var vendorEntry = path.resolve(options.appDir, 'vendor.js'),
+      templateFn  = adjustSourcemapLoader.moduleFilenameTemplate({
+        format: 'projectRelative'
+      });
 
   // Note that DedupePlugin causes problems when npm linked so we will ommit it from the common configuration
   // you need to add it yourself if you wish to use it
@@ -34,8 +38,8 @@ function common(loaderRoot, options) {
       output       : {
         filename                             : '[name].[chunkhash].js',
         chunkFilename                        : '[name].[chunkhash].js',
-        devtoolModuleFilenameTemplate        : '[resource-path]',
-        devtoolFallbackModuleFilenameTemplate: '[resource-path]?[hash]'
+        devtoolModuleFilenameTemplate        : templateFn,
+        devtoolFallbackModuleFilenameTemplate: templateFn
       },
       resolve      : {
         // do not use root as we want node_modules in linked projects to take precedence
@@ -103,7 +107,6 @@ function common(loaderRoot, options) {
       test   : /\.js$/i,
       exclude: /[\\\/](bower_components|webpack|css-loader)[\\\/]/i,
       loaders: [
-        'adjust-sourcemap?format=projectRelative',
         'ng-annotate?sourceMap',
         'adjust-sourcemap?format=absolute',  // fix ng-annotate source maps in Windows but tweaking incoming map
         'nginject?sourceMap&deprecate&singleQuote',

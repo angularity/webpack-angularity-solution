@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/angularity/webpack-angularity-solution",
   "dependencies": {
-    "adjust-sourcemap-loader": "^0.0.1",
+    "adjust-sourcemap-loader": "^0.1.0",
     "babel-core": "^6.4.5",
     "babel-loader": "^6.2.1",
     "bower-webpack-plugin": "^0.1.9",
