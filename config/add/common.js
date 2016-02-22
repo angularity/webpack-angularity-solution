@@ -7,7 +7,8 @@ var webpack               = require('webpack'),
     ExtractTextPlugin     = require('extract-text-webpack-plugin'),
     BowerWebpackPlugin    = require('bower-webpack-plugin'),
     EntryGeneratorPlugin  = require('entry-generator-webpack-plugin'),
-    OmitTildePlugin       = require('omit-tilde-webpack-plugin');
+    OmitTildePlugin       = require('omit-tilde-webpack-plugin'),
+    Md5HashPlugin         = require('webpack-md5-hash');
 
 /**
  * Add configuration common to all modes.
@@ -83,17 +84,23 @@ function common(loaderRoot, options) {
     .loader('image', {
       test   : /\.(jpe?g|png|gif|svg)([#?].*)?$/i,
       loaders: [
-        'file?hash=sha512&digest=hex&name=[hash].[ext]',
+        'file?name=[md5:hash:hex:20].[ext]',
         'image-webpack?optimizationLevel=7&interlaced=false'
       ]
     })
-    .loader('woff', {
-      test  : /\.woff2?([#?].*)?$/i,
-      loader: 'url?limit=10000&mimetype=application/font-woff&name=[hash].[ext]'
+    .loader('icon', {
+      test   : /\.ico([#?].*)?$/i,
+      loaders: [
+        'file?name=[md5:hash:hex:20].[ext]'
+      ]
     })
     .loader('font', {
-      test  : /\.(eot|ttf|ico|otf)([#?].*)?$/i,
-      loader: 'file?name=[hash].[ext]'
+      test  : /\.(eot|ttf|otf)([#?].*)?$/i,
+      loader: 'file?name=[md5:hash:hex:20].[ext]'
+    })
+    .loader('woff', {   // NB: I coppied this from somewhere, not sure why we would embed woff and not other fonts
+      test  : /\.woff2?([#?].*)?$/i,
+      loader: 'url?limit=10000&mimetype=application/font-woff&name=[md5:hash:hex:20].[ext]'
     })
     .loader('js-bower', {
       test   : /\.js$/i,
@@ -108,11 +115,12 @@ function common(loaderRoot, options) {
       exclude: /[\\\/](bower_components|webpack|css-loader)[\\\/]/i,
       loaders: [
         'ng-annotate?sourceMap',
-        'adjust-sourcemap?format=absolute',  // fix ng-annotate source maps in Windows but tweaking incoming map
+        // fix ng-annotate source maps in Windows but using absolute paths in incoming source-map
+        'adjust-sourcemap?format=absolute',
         'nginject?sourceMap&deprecate&singleQuote',
-        'babel?sourceMap&ignore=buffer&compact=false'
         // https://github.com/feross/buffer/issues/79
         // http://stackoverflow.com/a/29857361/5535360
+        'babel?sourceMap&ignore=buffer&compact=false'
       ]
     })
     .loader('html', {
@@ -134,7 +142,7 @@ function common(loaderRoot, options) {
       deprecate: true
     }])
     .plugin('bower', BowerWebpackPlugin, [{
-      includes                       : /\.((js|css)|(woff2?|eot|ttf|otf)([#?].*)?)$/i,
+      includes                       : /\.((js|css)|(jpe?g|png|gif|svg|ico)|(woff2?|eot|ttf|otf)([#?].*)?)$/i,
       searchResolveModulesDirectories: false
     }])
 
@@ -142,16 +150,18 @@ function common(loaderRoot, options) {
     .plugin('provide', webpack.ProvidePlugin, [options.globals])
 
     // output, chunking, optimisation
+    //  https://github.com/webpack/webpack/issues/1315#issuecomment-139930039
     .plugin('extract-text', ExtractTextPlugin, [
       undefined,
-      '[name].[contenthash].css',
+      '[name].[md5:contenthash:hex:20].css',
       {allChunks: true}
     ])
     .plugin('commons', webpack.optimize.CommonsChunkPlugin, [{
       name     : 'vendor',
       minChunks: Infinity
     }])
-    .plugin('occurence-order', webpack.optimize.OccurenceOrderPlugin);
+    .plugin('occurence-order', webpack.optimize.OccurenceOrderPlugin)
+    .plugin('md5-hash', Md5HashPlugin);
 }
 
 module.exports = common;
