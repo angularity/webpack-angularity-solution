@@ -11,6 +11,8 @@ var listCompositions = require('../lib/list-compositions');
  * @returns {Config} A webpack configurator
  */
 function release(configuratorFactory, options) {
+
+  // only the primary application will be released
   var composition = listCompositions(options.appDir)[0];
   if (composition) {
     return configuratorFactory()
