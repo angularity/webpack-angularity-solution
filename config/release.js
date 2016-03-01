@@ -18,7 +18,7 @@ function release(configuratorFactory, options) {
     return configuratorFactory()
       .addBrowserSync(options.releaseDir, options.port)
       .addClean(options.releaseDir)
-      .addComposition(composition)
+      .addComposition(composition, options.publicPath)
       .addCommon(path.resolve(__dirname, '..', 'node_modules'), options)
       .addConditionals({
         TEST   : false,

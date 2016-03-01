@@ -7,9 +7,10 @@ var IndexHTMLPlugin  = require('indexhtml-webpack-plugin'),
  * Add an application for compilation.
  * @this {Config} A webpack-configurator instance
  * @param {{namespace:Array.<string>, directory:string, htmlFiles:Array, indexFiles:Array}} item A composition item
+ * @param {string} [publicPath] Optional prefix for assets
  * @returns {Config} The given webpack-configurator instance
  */
-function composition(item) {
+function composition(item, publicPath) {
   /* jshint validthis:true */
   return this
     .merge({
@@ -26,7 +27,10 @@ function composition(item) {
     .plugin('gulp-inject', GulpInjectPlugin, [
       'index-html',
       ['manifest.json', 'vendor', /^vendor\./, 'index'],
-      {relative: true}
+      {
+        relative : true,
+        addPrefix: publicPath && publicPath.replace(/[\\\/]$/, '') || undefined
+      }
     ]);
 }
 
