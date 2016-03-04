@@ -1,7 +1,5 @@
 'use strict';
 
-var path = require('path');
-
 /**
  * Create a single webpack configurator for test.
  * @param {function} configuratorFactory A factory for the webpack-configurator
@@ -9,6 +7,9 @@ var path = require('path');
  * @returns {Config} A webpack configurator
  */
 function test(configuratorFactory, options) {
+
+  // lazy import packages
+  var path = require('path');
   var testEntry = path.resolve(options.appDir, 'test.js');
 
   return configuratorFactory()

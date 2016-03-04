@@ -1,9 +1,5 @@
 'use strict';
 
-var path = require('path');
-
-var listCompositions = require('../lib/list-compositions');
-
 /**
  * Create a single webpack configurator for release.
  * @param {function} configuratorFactory A factory for the webpack-configurator
@@ -11,6 +7,10 @@ var listCompositions = require('../lib/list-compositions');
  * @returns {Config} A webpack configurator
  */
 function release(configuratorFactory, options) {
+
+  // lazy import packages
+  var path = require('path');
+  var listCompositions = require('../lib/list-compositions');
 
   // only the primary application will be released
   var composition = listCompositions(options.appDir)[0];

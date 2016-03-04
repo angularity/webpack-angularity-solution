@@ -108,7 +108,7 @@ const GLOBALS = {
 
 module.exports = angularity(process.env, {globals: GLOBALS})
   .include(process.env.MODE) // app|test|release
-  .otherwise('app+test')	 // run app+test if MODE is unspecified
+  .otherwise('app_test')	 // run app+test if MODE is unspecified
   .resolve();
 ```
 

@@ -1,15 +1,5 @@
 'use strict';
 
-var path = require('path');
-
-var webpack               = require('webpack'),
-    adjustSourcemapLoader = require('adjust-sourcemap-loader'),
-    ExtractTextPlugin     = require('extract-text-webpack-plugin'),
-    BowerWebpackPlugin    = require('bower-webpack-plugin'),
-    EntryGeneratorPlugin  = require('entry-generator-webpack-plugin'),
-    OmitTildePlugin       = require('omit-tilde-webpack-plugin'),
-    Md5HashPlugin         = require('webpack-md5-hash');
-
 /**
  * Add configuration common to all modes.
  * @param {function} configuratorFactory A factory for the webpack-configurator
@@ -17,6 +7,16 @@ var webpack               = require('webpack'),
  * @returns {Config} The given webpack-configurator instance
  */
 function common(configuratorFactory, options) {
+
+  // lazy import packages
+  var path = require('path');
+  var webpack               = require('webpack'),
+      adjustSourcemapLoader = require('adjust-sourcemap-loader'),
+      ExtractTextPlugin     = require('extract-text-webpack-plugin'),
+      BowerWebpackPlugin    = require('bower-webpack-plugin'),
+      EntryGeneratorPlugin  = require('entry-generator-webpack-plugin'),
+      OmitTildePlugin       = require('omit-tilde-webpack-plugin'),
+      Md5HashPlugin         = require('webpack-md5-hash');
 
   // Note that DedupePlugin causes problems when npm linked so we will ommit it from the common configuration
   // you need to add it yourself if you wish to use it

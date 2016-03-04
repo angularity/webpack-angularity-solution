@@ -1,9 +1,5 @@
 'use strict';
 
-var path = require('path');
-
-var listCompositions   = require('../lib/list-compositions');
-
 /**
  * Create a list of webpack configurators, one for each application detected.
  * @param {function} configuratorFactory A factory for the webpack-configurator
@@ -11,6 +7,10 @@ var listCompositions   = require('../lib/list-compositions');
  * @returns {Array.<Config>} A list of configurators, one for each application detected
  */
 function app(configuratorFactory, options) {
+
+  // lazy import packages
+  var path = require('path');
+  var listCompositions = require('../lib/list-compositions');
 
   // there may be any number of compositions in subdirectories
   return listCompositions(options.appDir)
