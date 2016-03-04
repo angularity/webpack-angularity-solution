@@ -13,7 +13,6 @@ function test(configuratorFactory, options) {
 
   return configuratorFactory()
     .addClean(options.testDir)
-    .addCommon(path.resolve(__dirname, '..', 'node_modules'), options)
     .addConditionals({
       TEST   : true,
       DEBUG  : true,

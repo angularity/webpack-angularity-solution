@@ -100,16 +100,16 @@ Create a Webpack configuration file that delegates to the `webpack-angularity-so
 
 var angularity = require('webpack-angularity-solution');
 
-module.exports = angularity(process.env, {
-    globals: {
-        $              : 'jquery',
-        jQuery         : 'jquery',
-        'window.jQuery': 'jquery'
-    }
-}).resolve(function () {
-    /* jshint validthis:true */
-    return (process.env.MODE in this) ? this[process.env.MODE] : [].concat(this.app).concat(this.test);
-});
+const GLOBALS = {
+  $              : 'jquery',
+  jQuery         : 'jquery',
+  'window.jQuery': 'jquery'
+};
+
+module.exports = angularity(process.env, {globals: GLOBALS})
+  .include(process.env.MODE) // app|test|release
+  .otherwise('app+test')	 // run app+test if MODE is unspecified
+  .resolve();
 ```
 
 Some explanation:

@@ -20,7 +20,6 @@ function app(configuratorFactory, options) {
     var buildDir = path.join(options.buildDir, composition.directory),
         config   = configuratorFactory()
           .addClean(buildDir)
-          .addCommon(path.resolve(__dirname, '..', 'node_modules'), options)
           .addComposition(composition)
           .addConditionals({
             TEST   : false,

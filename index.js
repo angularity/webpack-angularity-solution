@@ -1,18 +1,39 @@
 'use strict';
 
-var path = require('path'),
-    fs   = require('fs');
+var multiConfigurator = require('webpack-multi-configurator');
 
-var defaults = require('lodash.defaults');
+var getConfiguratorFactory = require('./lib/get-configurator-factory');
 
-var defaultOptions         = require('./lib/default-options'),
-    parseOptions           = require('./lib/parse-options'),
-    getConfiguratorFactory = require('./lib/get-configurator-factory');
+const DEFAULT_OPTIONS = {
+  appDir    : './app',
+  buildDir  : './app-build',
+  testDir   : './app-test',
+  releaseDir: './app-release',
+  testGlob  : '**/*.spec.js',
+  port      : 55555,
+  unminified: false,
+  publicPath: undefined,
+  globals   : {},
+  stats     : {
+    hash        : true,
+    version     : true,
+    timings     : true,
+    assets      : true,
+    chunks      : true,
+    modules     : true,
+    reasons     : true,
+    children    : true,
+    source      : true,
+    errors      : true,
+    errorDetails: true,
+    warnings    : true,
+    publicPath  : true
+  }
+};
 
-var DEFAULT_OPERATORS = {
+const OPERATORS = {
   addBrowserSync          : require('./config/add/browser-sync'),
   addClean                : require('./config/add/clean'),
-  addCommon               : require('./config/add/common'),
   addComposition          : require('./config/add/composition'),
   addConditionals         : require('./config/add/conditionals'),
   addExternalChunkManifest: require('./config/add/external-chunk-manifest'),
@@ -22,72 +43,19 @@ var DEFAULT_OPERATORS = {
 
 /**
  * Create a set of accessors that yield webpack configurator(s).
- * @param {...object} [options] Any number of options hashes to be merged
- * @returns {{app:function, test:function, release:function, resolve:function}} A new instance
+ * @param {...object} [options] Any number of options hashes to be merged, or single configurator factory method
+ * @returns {{create:function, define:function, include:function, exclude:function, resolve:function}} A new instance
  */
-function create(options) {
+function create(/*...options*/) {
+  var options = Array.prototype.slice.call(arguments),
+      factory = getConfiguratorFactory(OPERATORS);
 
-  // legacy support
-  //  where angularity.json is present it should define the port
-  var angularityJsonPath = path.resolve('angularity.json'),
-      angularityPort     = fs.existsSync(angularityJsonPath) && require(angularityJsonPath).port || undefined;
-
-  // options set
-  var args = Array.prototype.slice.call(arguments),
-      opt  = parseOptions(
-        defaults.apply(null, [{}].concat(args)),            // merged options in
-        defaults({port: angularityPort}, defaultOptions())  // merged defaults
-      );
-
-  // default is the default operator set
-  return extend(DEFAULT_OPERATORS);
-
-  /**
-   * Extend the configurator with the given operators.
-   * @param {object} oldOperators A hash of the existing operators from the parent instance
-   * @param {object} newOperators A hash of operator overrides
-   * @returns {{extend:function, resolve:function, app:Array.<Configurator>, test:Configurator, release:Configurator}}
-   */
-  function extend(oldOperators, newOperators) {
-    var operators           = defaults({}, newOperators, oldOperators),
-        configuratorFactory = getConfiguratorFactory(operators);
-
-    // create and return the instance
-    var instance = {
-      extend : extend.bind(null, operators),
-      resolve: resolve,
-      get app() {
-        return require('./config/app')(configuratorFactory, opt);
-      },
-      get test() {
-        return require('./config/test')(configuratorFactory, opt);
-      },
-      get release() {
-        return require('./config/release')(configuratorFactory, opt);
-      }
-    };
-    return instance;
-
-    /**
-     * Call the given function with the instance (as this) and resolve() any webpack configurators that it returns.
-     * @param {function(instance:object):Config|Array.<Config>} fn A method to call with the instance as this
-     * @returns {Array.<object>|object} A webpack configuration or Array thereof
-     */
-    function resolve(fn) {
-      if (typeof fn !== 'function') {
-        throw new Error('The argument given to resolve() must be a function');
-      }
-      else {
-        return [].concat(fn.call(instance))
-          .filter(Boolean)
-          .map(resolveElement);
-      }
-
-      function resolveElement(configurator) {
-        return configurator.resolve();
-      }
-    }
-  }
+  return multiConfigurator(DEFAULT_OPTIONS, factory)
+    .create(options)
+    .define('common', require('./config/common'))
+    .define('app', 'common', require('./config/app'))
+    .define('test', 'common', require('./config/test'))
+    .define('release', 'common', require('./config/release'));
 }
 
 module.exports = create;
