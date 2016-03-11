@@ -2,15 +2,15 @@
 
 /**
  * Create a list of webpack configurators, one for each application detected.
- * @param {function} configuratorFactory A factory for the webpack-configurator
+ * @param {function():Config} factory A factory for the webpack-configurator
  * @param {{appDir:string, buildDir:string, globals:object, unminified:boolean, port:number}} options An options hash
- * @returns {Array.<Config>} A list of configurators, one for each application detected
+ * @returns {Array.<Config>} A list of ebpack-configurator instances, one for each application detected
  */
-function app(configuratorFactory, options) {
+function app(factory, options) {
 
   // lazy import packages
-  var path = require('path');
-  var listCompositions = require('../lib/list-compositions');
+  var path             = require('path'),
+      listCompositions = require('../lib/list-compositions');
 
   // there may be any number of compositions in subdirectories
   return listCompositions(options.appDir)
@@ -18,7 +18,7 @@ function app(configuratorFactory, options) {
 
   function eachComposition(composition, i) {
     var buildDir = path.join(options.buildDir, composition.directory),
-        config   = configuratorFactory()
+        config   = factory()
           .addClean(buildDir)
           .addComposition(composition)
           .addConditionals({

@@ -2,11 +2,11 @@
 
 /**
  * Add configuration common to all modes.
- * @param {function} configuratorFactory A factory for the webpack-configurator
+ * @param {Config} configurator A webpack-configurator instance
  * @param {{appDir:string, globals:object, stats:string}} options A hash of options
  * @returns {Config} The given webpack-configurator instance
  */
-function common(configuratorFactory, options) {
+function common(configurator, options) {
 
   // lazy import packages
   var path = require('path');
@@ -28,7 +28,7 @@ function common(configuratorFactory, options) {
         format: 'projectRelative'
       });
 
-  return configuratorFactory()
+  return configurator
     .merge({
       context      : process.cwd(),
       cache        : true,

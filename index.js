@@ -2,7 +2,7 @@
 
 var multiConfigurator = require('webpack-multi-configurator');
 
-var getConfiguratorFactory = require('./lib/get-configurator-factory');
+var configuratorFactory = require('./lib/configurator-factory');
 
 const DEFAULT_OPTIONS = {
   appDir    : './app',
@@ -44,18 +44,18 @@ const OPERATORS = {
 /**
  * Create a set of accessors that yield webpack configurator(s).
  * @param {...object} [options] Any number of options hashes to be merged, or single configurator factory method
- * @returns {{create:function, define:function, include:function, exclude:function, resolve:function}} A new instance
+ * @returns {function():{define:function, include:function, exclude:function, resolve:function}}
  */
-function create(/*...options*/) {
-  var options = Array.prototype.slice.call(arguments),
-      factory = getConfiguratorFactory(OPERATORS);
-
-  return multiConfigurator(DEFAULT_OPTIONS, factory)
-    .create(options)
-    .define('common', require('./config/common'))
-    .define('app', 'common', require('./config/app'))
-    .define('test', 'common', require('./config/test'))
-    .define('release', 'common', require('./config/release'));
-}
-
-module.exports = create;
+module.exports = multiConfigurator(DEFAULT_OPTIONS, configuratorFactory(OPERATORS))
+  .define('common')
+    .append(require('./config/common'))
+  .define('app')
+    .generate(require('./config/app'))
+    .append('common')
+  .define('test')
+    .append(require('./config/test'))
+    .append('common')
+  .define('release')
+    .append(require('./config/release'))
+    .append('common')
+  .create;

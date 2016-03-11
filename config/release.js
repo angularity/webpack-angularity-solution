@@ -2,20 +2,20 @@
 
 /**
  * Create a single webpack configurator for release.
- * @param {function} configuratorFactory A factory for the webpack-configurator
+ * @param {Config} configurator A webpack-configurator instance
  * @param {{appDir:string, releaseDir:string, globals:object, unminified:boolean, port:number}} options An options hash
- * @returns {Config} A webpack configurator
+ * @returns {Config} The given webpack-configurator instance
  */
-function release(configuratorFactory, options) {
+function release(configurator, options) {
 
   // lazy import packages
-  var path = require('path');
-  var listCompositions = require('../lib/list-compositions');
+  var path             = require('path'),
+      listCompositions = require('../lib/list-compositions');
 
   // only the primary application will be released
   var composition = listCompositions(options.appDir)[0];
   if (composition) {
-    return configuratorFactory()
+    return configurator
       .addBrowserSync(options.releaseDir, options.port)
       .addClean(options.releaseDir)
       .addComposition(composition, options.publicPath)
