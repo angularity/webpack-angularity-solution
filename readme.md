@@ -400,4 +400,4 @@ function newerFactory(newFactory, options) {
 
 You may call the `create()` method at any time. The new instance will inherit all the definitions from the previous one, but none of the inclusions.
 
-If you specify a new factory function it will be passed the previous factory as the first argument. In this way you can redefine the `webpack-configurator` instance to your liking.
+If you specify a new factory function it will be passed the previous factory as the first argument, and the final (merged) options as the second argument. In this way you can redefine the `webpack-configurator` instance to your liking.
