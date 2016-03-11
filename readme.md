@@ -293,7 +293,6 @@ For example, to **suppress warnings** during the build:
 {
   "scripts": {
     "silent": "cross-env STATS__WARNINGS=false webpack -d --progress"
-    ...
   }
 }
 ```
