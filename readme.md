@@ -371,6 +371,8 @@ function additional(configurator, options) {
 }
 ```
 
+Each operation is passed the existing `configurator`, and the final (merged) `options` . It should return a configurator, usually the same instance as that provided.
+
 ### Custom configurator
 
 If you want to add options, or change the generator, you may do so by calling the `create()` method.
@@ -400,4 +402,4 @@ function newerFactory(newFactory, options) {
 
 You may call the `create()` method at any time. The new instance will inherit all the definitions from the previous one, but none of the inclusions.
 
-If you specify a new factory function it will be passed the previous factory as the first argument, and the final (merged) options as the second argument. In this way you can redefine the `webpack-configurator` instance to your liking.
+If you specify a new factory function it will be passed the previous `factory`, and the final (merged) `options`. In this way you can redefine the `webpack-configurator` instance to your liking.
