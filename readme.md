@@ -327,3 +327,68 @@ There has been a lot of effort made to ensure you can extend the Webpack configu
 The defined modes of `app`, `test`, and `release` each generate one or more [webpack-configurator](https://www.npmjs.com/package/webpack-configurator) instances. You will need to understand the webpack-configurator API in order to make any changes.
 
 Each of these modes is defined using [webpack-multi-configurator](https://www.npmjs.com/package/webpack-multi-configurator).
+
+### Existing structure
+
+You should take a look at the [index.js](https://github.com/angularity/webpack-angularity-solution/blob/master/index.js) to see how the multi configurator is prepared. At the time of writing it is structured as follows.
+
+![](./doc/extensibility.png)
+
+For `test` and `release` there is no generator, a factory simply creates the configurator. In the case of `app` there is a generator that creates a configurator instance for each composition in the `/app` directory. Generators are passed the factory function so do not need to depend on `webpack-configurator` themselves.
+
+When there are multiple compositions generated in `app`, each one of them is applied to the operations seperately. For `app` there are no additional operations, except those defined in `common`. While `test` and `release` define a single operation and then add the additional operations from `common`.
+
+Finally all configurators are resolved to yeild an Array of plain objects, suitable for Webpack. If you include several definitions then they will all contribute configurations to this Array.
+
+### Making amendments
+
+So if you want edit all modes, you would `append()` an operation to `common`. This may be done at any time before `resolve()` is called.
+
+```javascript
+module.exports = angularity(...)
+  .define('common')
+    .append(additional)
+  ...
+  .resolve();
+
+function additional(configurator, options) {
+  return configurator
+    .merge(...);
+}
+```
+
+If you wanted to edit `test`, you would `append()` an operation to `test`. This may be done at any time before `resolve()` is called.
+
+```javascript
+module.exports = angularity(...)
+  .define('test')
+    .append(additional)
+  ...
+  .resolve();
+
+function additional(configurator, options) {
+  return configurator
+    .merge(...);
+}
+```
+
+### Custom configurator
+
+If you want to add options, or change the generator, you may call the `create()` method.
+
+```javascript
+module.exports = angularity(...)
+  .create({...}, factory)
+  ...
+  .resolve();
+
+function factory(oldFactory, options) {
+  var instance = factory();
+  instance.foo = function foo(){};
+  return instance;
+}
+```
+
+The new instance will inherit all the definitions from the previous one, but none of the inclusions.
+
+If you specify a new factory function it will be passed the previous factory as the first argument. In this way you can  mixin extensions to `webpack-configurator`.
