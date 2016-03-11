@@ -385,13 +385,13 @@ module.exports = angularity({...}, newFactory)
   .resolve();
 
 function newFactory(internalFactory, options) {
-  var instance = factory();
+  var instance = internalFactory();
   instance.foo = function foo(){};
   return instance;
 }
 
 function newerFactory(newFactory, options) {
-  var instance = factory();
+  var instance = newFactory();
   instance.bar = function bar(){};
   return instance;
 }
