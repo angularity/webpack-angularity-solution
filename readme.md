@@ -190,13 +190,11 @@ Some explanation:
 
 	Note that there are **no globals** in applications bundled by Webpack. If your code relies on globals such as jQuery, you will have to configure the `globals` option as shown above.
 
-	Add additional globals as required by your application.
-	
-	TODO shimming
+	Add additional globals as required by your application. Alternatively consider module **Shimming** (see Shimming below).
 	
 * **Option `port`**
 
-  By default `--watch` in the `app` mode will launch a BrowserSync server on port `55555`. You should override this port to some unique value so that your projects to no conflict with each other.
+	By default `--watch` in the `app` mode will launch a BrowserSync server on port `55555`. You should override this port to some unique value so that your projects to no conflict with each other.
 
 * **Options by `process.env`**
 
