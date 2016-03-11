@@ -337,7 +337,7 @@ For `test` and `release` there is no generator, a factory simply creates the con
 
 When there are multiple compositions generated in `app`, each one of them is applied to the operations seperately. For `app` there are no additional operations, except those defined in `common`. While `test` and `release` define a single operation and then add the additional operations from `common`.
 
-Finally all configurators are resolved to yeild an Array of plain objects, suitable for Webpack. If you include several definitions then they will all contribute configurations to this Array.
+Finally all configurators are resolved to yield an Array of plain objects, suitable for Webpack. If you include several definitions then they will all contribute configurations to this Array.
 
 ### Making amendments
 
@@ -373,21 +373,31 @@ function additional(configurator, options) {
 
 ### Custom configurator
 
-If you want to add options, or change the generator, you may call the `create()` method.
+If you want to add options, or change the generator, you may do so by calling the `create()` method.
+
+Interestingly the export from `webpack-angularity-solution` is actually the `create()` function from an existing webpack-multi-configurator composition.
 
 ```javascript
-module.exports = angularity(...)
-  .create({...}, factory)
+module.exports = angularity({...}, newFactory)
+  ...
+  .create({...}, newerFactory)
   ...
   .resolve();
 
-function factory(oldFactory, options) {
+function newFactory(internalFactory, options) {
   var instance = factory();
   instance.foo = function foo(){};
   return instance;
 }
+
+function newerFactory(newFactory, options) {
+  var instance = factory();
+  instance.bar = function bar(){};
+  return instance;
+}
+
 ```
 
-The new instance will inherit all the definitions from the previous one, but none of the inclusions.
+You may call the `create()` method at any time. The new instance will inherit all the definitions from the previous one, but none of the inclusions.
 
-If you specify a new factory function it will be passed the previous factory as the first argument. In this way you can  mixin extensions to `webpack-configurator`.
+If you specify a new factory function it will be passed the previous factory as the first argument. In this way you can redefine the `webpack-configurator` instance to your liking.
