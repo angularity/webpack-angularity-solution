@@ -190,7 +190,9 @@ Some explanation:
 
 	Note that there are **no globals** in applications bundled by Webpack. If your code relies on globals such as jQuery, you will have to configure the `globals` option as shown above.
 
-	Add additional globals as required by your application. Alternatively consider module **Shimming** (see Shimming below).
+	Add additional globals as required by your application.
+	
+	Better practice may be to solve the problem at its source using module **Shimming** (see Shimming below).
 	
 * **Option `port`**
 
