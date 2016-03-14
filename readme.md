@@ -37,15 +37,17 @@ If you wish to build a similar system with different constraints, or for a platf
 ## Getting started
 
 Please refer to the documentation:
+
  * [installation](https://github.com//angularity/webpack-angularity-solution/wiki/installation)
  * [conventions](https://github.com//angularity/webpack-angularity-solution/wiki/conventions)
  * [project setup](https://github.com//angularity/webpack-angularity-solution/wiki/project-setup)
  * [usage](https://github.com//angularity/webpack-angularity-solution/wiki/usage)
- * [how do I get started with...?](https://github.com//angularity/webpack-angularity-solution/wiki/how-do-i#basics) 
+ * [troubleshooting](https://github.com//angularity/webpack-angularity-solution/wiki/troubleshooting)
 
-## Customisation
+## How it works
 
 Please refer to the documentation:
- * [configuration](https://github.com//angularity/webpack-angularity-solution/wiki/configuration) and the [options reference](https://github.com//angularity/webpack-angularity-solution/wiki/options) 
- * [extensibility](https://github.com//angularity/webpack-angularity-solution/wiki/extensibility)
- * [how do I customise...?](https://github.com//angularity/webpack-angularity-solution/wiki/how-do-i#customisation)
+
+ * [configuration](configuration) and the [options reference](options)
+ * [extensibility](extensibility)
+ * [how do I...?](how-do-i)
