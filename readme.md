@@ -24,11 +24,11 @@ The solution contained in this project with work with **NodeJS 4.x.x**. It is mo
 
 ## Installation
 
-Please refere to detailed [installation](wiki/installation) instructions.
+Please refere to detailed [installation](https://github.com//angularity/webpack-angularity-solution/wiki/installation) instructions.
 
 ## Project setup
 
-Please refere to detailed [project setup](wiki/installation) instructions.
+Please refere to detailed [project setup](https://github.com//angularity/webpack-angularity-solution/wiki/project-setup) instructions.
 
 ## Usage
 
