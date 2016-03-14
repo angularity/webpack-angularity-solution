@@ -1,23 +1,34 @@
 'use strict';
 
 /**
- * Create a single webpack configurator for release.
- * @param {Config} configurator A webpack-configurator instance
- * @param {{appDir:string, releaseDir:string, globals:object, unminified:boolean, port:number}} options An options hash
- * @returns {Config} The given webpack-configurator instance
+ * Create a list of webpack configurators, one for each application detected.
+ * @param {function():Config} factory A factory for the webpack-configurator
+ * @param {{appDir:string, releaseDir:string, names:Array, globals:object, unminified:boolean, port:number}} options
+ * @returns {Array.<Config>} A list of Webpack-configurator instances, one for each application detected
  */
-function release(configurator, options) {
+function release(factory, options) {
 
   // lazy import packages
   var path             = require('path'),
-      listCompositions = require('../lib/list-compositions');
+      listCompositions = require('../lib/list-compositions'),
+      appFilter        = require('../lib/app-filter');
 
-  // only the primary application will be released
-  var composition = listCompositions(options.appDir)[0];
-  if (composition) {
-    return configurator
-      .addBrowserSync(options.releaseDir, options.port)
-      .addClean(options.releaseDir)
+  // there may be any number of compositions in subdirectories
+  var list = listCompositions(options.appDir, 'release')
+    .filter(appFilter(options.names));
+
+  // ensure at least one composition or webpack will crash with a cryptic error
+  if (list.length) {
+    return list.map(eachComposition);
+  }
+  else {
+    throw new Error('There are no compositions included in this build.');
+  }
+
+  function eachComposition(composition) {
+    var releaseDir = path.join(options.releaseDir, composition.directory);
+    return factory()
+      .addClean(releaseDir)
       .addComposition(composition, options.publicPath)
       .addConditionals({
         TEST   : false,
@@ -27,15 +38,12 @@ function release(configurator, options) {
       .addExternalChunkManifest()
       .addMinification(!options.unminified)
       .merge({
-        name  : 'release',
+        name  : composition.namespace.join('.'),
         output: {
-          path      : path.resolve(options.releaseDir),
+          path      : path.resolve(releaseDir),
           publicPath: options.publicPath
         }
       });
-  }
-  else {
-    throw new Error('there are no compositions in the app directory');
   }
 }
 

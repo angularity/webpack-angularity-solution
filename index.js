@@ -12,6 +12,7 @@ const DEFAULT_OPTIONS = {
   testGlob  : '**/*.spec.js',
   port      : 55555,
   unminified: false,
+  names     : 'app*, release',
   publicPath: undefined,
   globals   : {},
   stats     : {
@@ -56,6 +57,6 @@ module.exports = multiConfigurator(DEFAULT_OPTIONS, configuratorFactory(OPERATOR
     .append(require('./config/test'))
     .append('common')
   .define('release')
-    .append(require('./config/release'))
+    .generate(require('./config/release'))
     .append('common')
   .create;
