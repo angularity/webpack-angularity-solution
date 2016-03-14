@@ -30,7 +30,9 @@ It eliminates the need to specify multiple dependencies in your root project. Un
 
 Within your `webpack.config.js` you delegate to this package. However there are a number of options that you can set, and an API for customisation of the full configuration.
 
-If you wish to build a similar system for a platform other than **AngularJS 1.x**, you will find [webpack-multi-configurator](https://www.npmjs.com/package/webpack-multi-configurator) is where all the smarts are.
+There are some structural [conventions](https://github.com//angularity/webpack-angularity-solution/wiki/conventions) that you need to follow. Any existing **Angularity** project satisfies these.
+
+If you wish to build a similar system with different constraints, or for a platform other than **AngularJS 1.x**, you will find [webpack-multi-configurator](https://www.npmjs.com/package/webpack-multi-configurator) is where all the smarts are.
 
 ## Reference
 
