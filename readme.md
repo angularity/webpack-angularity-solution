@@ -34,26 +34,18 @@ There are some structural [conventions](https://github.com//angularity/webpack-a
 
 If you wish to build a similar system with different constraints, or for a platform other than **AngularJS 1.x**, you will find [webpack-multi-configurator](https://www.npmjs.com/package/webpack-multi-configurator) is where all the smarts are.
 
-## Reference
+## Getting started
 
-### Installation
+Please refer to the documentation:
+ * [installation](https://github.com//angularity/webpack-angularity-solution/wiki/installation)
+ * [conventions](https://github.com//angularity/webpack-angularity-solution/wiki/conventions)
+ * [project setup](https://github.com//angularity/webpack-angularity-solution/wiki/project-setup)
+ * [usage](https://github.com//angularity/webpack-angularity-solution/wiki/usage)
+ * [how do I get started with...?](https://github.com//angularity/webpack-angularity-solution/wiki/how-do-i#basics) 
 
-Please refer to detailed [installation](https://github.com//angularity/webpack-angularity-solution/wiki/installation) instructions.
+## Customisation
 
-### Project setup
-
-Please refer to detailed [project setup](https://github.com//angularity/webpack-angularity-solution/wiki/project-setup) instructions.
-
-### Usage
-
-Usage is typically per [npm scripts](https://docs.npmjs.com/misc/scripts).
-
-Please refer to detailed [usage](https://github.com//angularity/webpack-angularity-solution/wiki/usage) instructions.
-
-### Customising
-
-There has been a lot of effort made to ensure you can extend the Webpack configurations with your own ammendments.
-
-There is also detailed a [configuration](https://github.com//angularity/webpack-angularity-solution/wiki/configuration) reference.
-
-Going further there are detailed [extensibility](https://github.com//angularity/webpack-angularity-solution/wiki/extensibility) instructions with examples.
+Please refer to the documentation:
+ * [configuration](https://github.com//angularity/webpack-angularity-solution/wiki/configuration) and the [options reference](https://github.com//angularity/webpack-angularity-solution/wiki/options) 
+ * [extensibility](https://github.com//angularity/webpack-angularity-solution/wiki/extensibility)
+ * [how do I customise...?](https://github.com//angularity/webpack-angularity-solution/wiki/how-do-i#customisation)
