@@ -54,4 +54,4 @@ There has been a lot of effort made to ensure you can extend the Webpack configu
 
 There is also detailed a [configuration](https://github.com//angularity/webpack-angularity-solution/wiki/configuration) reference.
 
-Going further there are detailed [extensibility](https://github.com//angularity/webpack-angularity-solution/wiki/configuration) instructions with examples.
+Going further there are detailed [extensibility](https://github.com//angularity/webpack-angularity-solution/wiki/extensibility) instructions with examples.
