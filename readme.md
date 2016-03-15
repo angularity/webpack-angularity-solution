@@ -24,7 +24,7 @@ The solution contained in this project with work with **NodeJS 4.x.x**. It is mo
 
 ## Overview
 
-This package is a singple `devDependency` that bundles together a comprehensive solution for building **AngularJS 1.x** projects.
+This package is a single `devDependency` that bundles together a comprehensive solution for building **AngularJS 1.x** projects.
 
 It eliminates the need to specify multiple dependencies in your root project. Unfortunately following **npm 3.x** you will still get noise from your build-system in your `/node_modules`.
 
@@ -34,20 +34,26 @@ There are some structural [conventions](https://github.com//angularity/webpack-a
 
 If you wish to build a similar system with different constraints, or for a platform other than **AngularJS 1.x**, you will find [webpack-multi-configurator](https://www.npmjs.com/package/webpack-multi-configurator) is where all the smarts are.
 
-## Getting started
+## Features
 
-Please refer to the documentation:
+Mix and match modes of operation
+* Build any number of **compositions** per project
+* Detect and build **unit tests**
+* Release build of **compositions** with external cache manifest for long-term caching
 
- * [installation](https://github.com//angularity/webpack-angularity-solution/wiki/installation)
- * [conventions](https://github.com//angularity/webpack-angularity-solution/wiki/conventions)
- * [project setup](https://github.com//angularity/webpack-angularity-solution/wiki/project-setup)
- * [usage](https://github.com//angularity/webpack-angularity-solution/wiki/usage)
- * [troubleshooting](https://github.com//angularity/webpack-angularity-solution/wiki/troubleshooting)
+Compose
+* Automatically imports **Bower** components, but allows you to **fix broken packages**
+* Import **npm** components, with **babel** transpilation
 
-## How it works
+Angular
+* Annotation of injectables pre-minification
+* Import **HTML** directly (no more template cache)
 
-Please refer to the documentation:
+Compile
+* Develop with minified code, debug with impeccable source-maps
+* Import **SASS** and CSS directly, with URL re-writing of assets
+* Detect, optimise, and hash assets in image tags, icon links, in SASS and CSS
 
- * [configuration](configuration) and the [options reference](options)
- * [extensibility](extensibility)
- * [how do I...?](how-do-i)
+## Documentation
+
+Please refer to the [wiki](https://github.com//angularity/webpack-angularity-solution/wiki).
