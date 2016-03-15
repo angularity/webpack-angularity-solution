@@ -1,19 +1,21 @@
 'use strict';
 
-var path = require('path');
-
 /**
  * Create a single webpack configurator for test.
- * @param {function} configuratorFactory A factory for the webpack-configurator
+ * @param {Config} configurator A webpack-configurator instance
  * @param {{appDir:string, testDir:string, globals:object, testGlob:string}} options An options hash
- * @returns {Config} A webpack configurator
+ * @returns {Config} The given webpack-configurator instance
  */
-function test(configuratorFactory, options) {
+function test(configurator, options) {
+
+  // lazy import packages
+  var path = require('path');
+
+  // generate an entry file for all tests
   var testEntry = path.resolve(options.appDir, 'test.js');
 
-  return configuratorFactory()
+  return configurator
     .addClean(options.testDir)
-    .addCommon(path.resolve(__dirname, '..', 'node_modules'), options)
     .addConditionals({
       TEST   : true,
       DEBUG  : true,

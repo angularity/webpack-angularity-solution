@@ -1,34 +1,34 @@
 'use strict';
 
-var path = require('path');
-
-var webpack               = require('webpack'),
-    adjustSourcemapLoader = require('adjust-sourcemap-loader'),
-    ExtractTextPlugin     = require('extract-text-webpack-plugin'),
-    BowerWebpackPlugin    = require('bower-webpack-plugin'),
-    EntryGeneratorPlugin  = require('entry-generator-webpack-plugin'),
-    OmitTildePlugin       = require('omit-tilde-webpack-plugin'),
-    Md5HashPlugin         = require('webpack-md5-hash');
-
 /**
  * Add configuration common to all modes.
- * @this {Config} A webpack-configurator instance
- * @param {string} loaderRoot The base path in which to locate loaders
+ * @param {Config} configurator A webpack-configurator instance
  * @param {{appDir:string, globals:object, stats:string}} options A hash of options
  * @returns {Config} The given webpack-configurator instance
  */
-function common(loaderRoot, options) {
-  var vendorEntry = path.resolve(options.appDir, 'vendor.js'),
-      templateFn  = adjustSourcemapLoader.moduleFilenameTemplate({
-        format: 'projectRelative'
-      });
+function common(configurator, options) {
+
+  // lazy import packages
+  var path = require('path');
+  var webpack               = require('webpack'),
+      adjustSourcemapLoader = require('adjust-sourcemap-loader'),
+      ExtractTextPlugin     = require('extract-text-webpack-plugin'),
+      BowerWebpackPlugin    = require('bower-webpack-plugin'),
+      EntryGeneratorPlugin  = require('entry-generator-webpack-plugin'),
+      OmitTildePlugin       = require('omit-tilde-webpack-plugin'),
+      Md5HashPlugin         = require('webpack-md5-hash');
 
   // Note that DedupePlugin causes problems when npm linked so we will ommit it from the common configuration
   // you need to add it yourself if you wish to use it
   //  https://github.com/webpack/karma-webpack/issues/41#issuecomment-139516692
 
-  /* jshint validthis:true */
-  return this
+  var vendorEntry = path.resolve(options.appDir, 'vendor.js'),
+      loaderRoot  = path.resolve(__dirname, '..', 'node_modules'),
+      templateFn  = adjustSourcemapLoader.moduleFilenameTemplate({
+        format: 'projectRelative'
+      });
+
+  return configurator
     .merge({
       context      : process.cwd(),
       cache        : true,
