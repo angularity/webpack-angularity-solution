@@ -52,6 +52,6 @@
     "url-loader": "~0.5.7",
     "webpack": "~1.12.12",
     "webpack-md5-hash": "~0.0.5",
-    "webpack-multi-configurator": "~1.0.0"
+    "webpack-multi-configurator": "~1.0.3"
   }
 }
