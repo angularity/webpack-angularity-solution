@@ -53,10 +53,10 @@ module.exports = multiConfigurator(DEFAULT_OPTIONS, configuratorFactory(OPERATOR
   .define('app')
     .generate(require('./config/app'))
     .append('common')
-  .define('test')
-    .append(require('./config/test'))
-    .append('common')
   .define('release')
     .generate(require('./config/release'))
+    .append('common')
+  .define('test')
+    .append(require('./config/test'))
     .append('common')
   .create;
