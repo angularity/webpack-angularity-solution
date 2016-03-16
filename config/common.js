@@ -125,7 +125,7 @@ function common(configurator, options) {
     })
     .loader('html', {
       test  : /\.html?$/i,
-      loader: 'html?removeComments=false&attrs=img:src link:href'
+      loader: 'html?interpolate&removeComments=false&attrs=img:src link:href'
     })
     .loader('json', {
       test  : /\.json$/i,
