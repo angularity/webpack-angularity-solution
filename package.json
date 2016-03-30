@@ -1,6 +1,6 @@
 {
   "name": "webpack-angularity-solution",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Requisite configuration and modules to build Angularity projects with Webpack",
   "main": "index.js",
   "repository": {
@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/angularity/webpack-angularity-solution",
   "dependencies": {
-    "adjust-sourcemap-loader": "~0.1.0",
+    "adjust-sourcemap-loader": "~0.1.1",
     "babel-core": "~6.4.5",
     "babel-loader": "~6.2.1",
     "bower-webpack-plugin": "~0.1.9",
@@ -30,7 +30,7 @@
     "clean-webpack-plugin": "~0.1.7",
     "cross-env": "~1.0.7",
     "css-loader": "~0.23.1",
-    "entry-generator-webpack-plugin": "~0.2.0",
+    "entry-generator-webpack-plugin": "~0.2.1",
     "esmangle-webpack-plugin": "~0.0.1",
     "exports-loader": "~0.6.2",
     "extract-text-webpack-plugin": "~1.0.1",
@@ -43,6 +43,7 @@
     "jshint": "~2.9.1",
     "jshint-loader": "~0.8.3",
     "json-loader": "~0.5.4",
+    "md5": "~2.1.0",
     "ng-annotate-loader": "~0.1.0",
     "nginject-loader": "~2.1.0",
     "node-sass": "~3.4.2",
@@ -51,7 +52,6 @@
     "sass-loader": "~3.1.2",
     "url-loader": "~0.5.7",
     "webpack": "~1.12.12",
-    "webpack-md5-hash": "~0.0.5",
     "webpack-multi-configurator": "~1.0.3"
   }
 }

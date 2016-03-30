@@ -17,6 +17,9 @@ function release(factory, options) {
   var list = listCompositions(options.appDir, 'release')
     .filter(appFilter(options.names));
 
+  // where the public path is present it must have a trailing slash
+  var publicPath = options.publicPath && options.publicPath.replace(/[\\\/]?$/, '/') || undefined;
+
   // ensure at least one composition or webpack will crash with a cryptic error
   if (list.length) {
     return list.map(eachComposition);
@@ -41,7 +44,7 @@ function release(factory, options) {
         name  : composition.namespace.join('.'),
         output: {
           path      : path.resolve(releaseDir),
-          publicPath: options.publicPath
+          publicPath: publicPath
         }
       });
   }

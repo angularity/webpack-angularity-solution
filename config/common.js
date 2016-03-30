@@ -15,8 +15,8 @@ function common(configurator, options) {
       ExtractTextPlugin     = require('extract-text-webpack-plugin'),
       BowerWebpackPlugin    = require('bower-webpack-plugin'),
       EntryGeneratorPlugin  = require('entry-generator-webpack-plugin'),
-      OmitTildePlugin       = require('omit-tilde-webpack-plugin'),
-      Md5HashPlugin         = require('webpack-md5-hash');
+      OmitTildePlugin       = require('omit-tilde-webpack-plugin');
+  var OrderAndHashPlugin = require('../lib/order-and-hash-plugin');
 
   // Note that DedupePlugin causes problems when npm linked so we will ommit it from the common configuration
   // you need to add it yourself if you wish to use it
@@ -68,7 +68,7 @@ function common(configurator, options) {
     // some obscure modules like to 'require()' angular, but bower angular does not export anything
     .loader('export-angular', {
       test   : /[\\\/]angular\.js$/i,
-      include: /[\\\/]bower_components[\\\/]/i,
+      include: /[\\\/]bower_components[\\\/]angular[\\\/]/i,
       loader : 'exports?angular'
     })
 
@@ -160,8 +160,7 @@ function common(configurator, options) {
       name     : 'vendor',
       minChunks: Infinity
     }])
-    .plugin('occurence-order', webpack.optimize.OccurenceOrderPlugin)
-    .plugin('md5-hash', Md5HashPlugin);
+    .plugin('order-and-hash', OrderAndHashPlugin);
 }
 
 module.exports = common;

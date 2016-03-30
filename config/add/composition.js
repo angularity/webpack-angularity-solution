@@ -29,7 +29,7 @@ function composition(item, publicPath) {
       ['manifest.json', 'vendor', /^vendor\./, 'index'],
       {
         relative : true,
-        addPrefix: publicPath && publicPath.replace(/[\\\/]$/, '') || undefined
+        addPrefix: publicPath && publicPath.replace(/[\\\/]$/, '') || undefined  // must omit trailing slash
       }
     ]);
 }
