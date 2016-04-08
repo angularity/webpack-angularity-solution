@@ -1,7 +1,5 @@
 'use strict';
 
-var webpack = require('webpack');
-
 /**
  * Add compiler conditionals.
  * @this {Config} A webpack-configurator instance
@@ -9,6 +7,10 @@ var webpack = require('webpack');
  * @returns {Config} The given webpack-configurator instance
  */
 function conditionals(flags) {
+
+  // lazy import packages
+  var webpack = require('webpack');
+
   /* jshint validthis:true */
   return this
     .plugin('conditionals', webpack.ProvidePlugin, [flags]);

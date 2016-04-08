@@ -1,7 +1,5 @@
 'use strict';
 
-var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-
 /**
  * Add browser-sync server for Webpack `--watch`.
  * @this {Config} A webpack-configurator instance
@@ -10,6 +8,10 @@ var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
  * @returns {Config} The given webpack-configurator instance
  */
 function browserSync(directory, port) {
+
+  // lazy import packages
+  var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+
   /* jshint validthis:true */
   return this
     .plugin('browser-sync', BrowserSyncPlugin, [{

@@ -1,7 +1,5 @@
 'use strict';
 
-var CleanPlugin = require('clean-webpack-plugin');
-
 /**
  * Remove the given directory at compilation start.
  * @this {Config} A webpack-configurator instance
@@ -9,6 +7,10 @@ var CleanPlugin = require('clean-webpack-plugin');
  * @returns {Config} The given webpack-configurator instance
  */
 function clean(directory) {
+
+  // lazy import packages
+  var CleanPlugin = require('clean-webpack-plugin');
+
   /* jshint validthis:true */
   return this
     .plugin('clean', CleanPlugin, [

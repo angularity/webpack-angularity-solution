@@ -1,7 +1,5 @@
 'use strict';
 
-var ESManglePlugin = require('esmangle-webpack-plugin');
-
 /**
  * Minify javascript where enabled.
  * @this {Config} A webpack-configurator instance
@@ -9,6 +7,10 @@ var ESManglePlugin = require('esmangle-webpack-plugin');
  * @returns {Config} The given webpack-configurator instance
  */
 function minification(enabled) {
+
+  // lazy import packages
+  var ESManglePlugin = require('esmangle-webpack-plugin');
+
   /* jshint validthis:true */
   if (enabled) {
     this

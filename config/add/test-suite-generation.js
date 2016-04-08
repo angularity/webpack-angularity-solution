@@ -1,7 +1,5 @@
 'use strict';
 
-var EntryGeneratorPlugin = require('entry-generator-webpack-plugin');
-
 /**
  * Locate all specification files and generate a file that require()s them all.
  * @this {Config} A webpack-configurator instance
@@ -10,6 +8,10 @@ var EntryGeneratorPlugin = require('entry-generator-webpack-plugin');
  * @returns {Config} The given webpack-configurator instance
  */
 function testSuiteGeneration(outputFile, testGlob) {
+
+  // lazy import packages
+  var EntryGeneratorPlugin = require('entry-generator-webpack-plugin');
+
   /* jshint validthis:true */
   return this
     .plugin('generate-test', EntryGeneratorPlugin, [
