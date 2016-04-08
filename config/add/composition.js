@@ -10,16 +10,10 @@
 function composition(item, useHash) {
 
   // lazy import packages
-  var HtmlWebpackPlugin   = require('html-webpack-plugin'),
+  var path                = require('path'),
+      HtmlWebpackPlugin   = require('html-webpack-plugin'),
       ExtractTextPlugin   = require('extract-text-webpack-plugin'),
       htmlTemplateContent = require('../../lib/html-template-content');
-
-  // create a regexp to match a single file
-  var regExpSrc = item.htmlFile
-    .replace(/^\./, '')               // remove relative path prefix
-    .replace(/[\\\/]/g, '[\\\\\\/]')  // escape directories
-    .replace(/\./g, '\\.')            // escape period
-    .replace(/$/, '$');               // match only the end of the path
 
   /* jshint validthis:true */
   return this
@@ -33,8 +27,9 @@ function composition(item, useHash) {
 
     // extract the text of the index.html
     //  don't minimize or interpolate as embedded script (e.g. google analytics) can crash the html parser
+    //  loaders in the common configuration must not overlap
     .loader('index-html', {
-      test  : new RegExp(regExpSrc),
+      test  : path.resolve(item.htmlFile),
       loader: ExtractTextPlugin.extract('html?minimize=false&attrs=img:src link:href', {
         id: 'html'
       })

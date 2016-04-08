@@ -14,9 +14,9 @@ function minification(enabled) {
   /* jshint validthis:true */
   if (enabled) {
     this
-      .plugin('minification', ESManglePlugin, [
-        {exclude: /test.\w+.js$/i}
-      ]);
+      .plugin('minification', ESManglePlugin, [{
+        exclude: /(test|indexhtml).\w+.js$/i
+      }]);
   }
   return this;
 }

@@ -18,16 +18,23 @@ function common(configurator, options) {
       OmitTildePlugin       = require('omit-tilde-webpack-plugin'),
       OrderAndHashPlugin    = require('../lib/order-and-hash-plugin');
 
-  // Note that DedupePlugin causes problems when npm linked so we will ommit it from the common configuration
-  // you need to add it yourself if you wish to use it
-  //  https://github.com/webpack/karma-webpack/issues/41#issuecomment-139516692
-
+  // calculated values
   var vendorEntry = path.resolve(options.appDir, 'vendor.js'),
       loaderRoot  = path.resolve(__dirname, '..', 'node_modules'),
       templateFn  = adjustSourcemapLoader.moduleFilenameTemplate({
         format: 'projectRelative'
       });
 
+  // make a regexp that excludes everything in the app directory
+  //  this is important to ensure some loaders do not overlap
+  var appRegExpSrc = path.resolve(options.appDir)
+    .replace(/[\\\/]?$/g, '[\\\\\\/]')  // escape path separator
+    .replace(/\./g, '\.');              // escape period
+  var appRexExp = new RegExp(appRegExpSrc);
+
+  // Note that DedupePlugin causes problems when npm linked so we will ommit it from the common configuration
+  // you need to add it yourself if you wish to use it
+  //  https://github.com/webpack/karma-webpack/issues/41#issuecomment-139516692
   return configurator
     .merge({
       context      : process.cwd(),
@@ -130,8 +137,9 @@ function common(configurator, options) {
       ]
     })
     .loader('html', {
-      test  : /\.html?$/i,
-      loader: 'html?interpolate&removeComments=false&attrs=img:src link:href'
+      test   : /\.html?$/i,
+      exclude: appRexExp,
+      loader : 'html?interpolate&removeComments=false&attrs=img:src link:href'
     })
     .loader('json', {
       test  : /\.json$/i,
