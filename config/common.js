@@ -9,14 +9,14 @@
 function common(configurator, options) {
 
   // lazy import packages
-  var path = require('path');
-  var webpack               = require('webpack'),
+  var path                  = require('path'),
+      webpack               = require('webpack'),
       adjustSourcemapLoader = require('adjust-sourcemap-loader'),
       ExtractTextPlugin     = require('extract-text-webpack-plugin'),
       BowerWebpackPlugin    = require('bower-webpack-plugin'),
       EntryGeneratorPlugin  = require('entry-generator-webpack-plugin'),
-      OmitTildePlugin       = require('omit-tilde-webpack-plugin');
-  var OrderAndHashPlugin = require('../lib/order-and-hash-plugin');
+      OmitTildePlugin       = require('omit-tilde-webpack-plugin'),
+      OrderAndHashPlugin    = require('../lib/order-and-hash-plugin');
 
   // Note that DedupePlugin causes problems when npm linked so we will ommit it from the common configuration
   // you need to add it yourself if you wish to use it
@@ -55,7 +55,9 @@ function common(configurator, options) {
       node         : {
         fs: 'empty'
       },
-      stats        : options.stats
+      debug        : true,          // don't imply additional optimisations, we will add them explicitly
+      defineDebug  : false,         // set compiler conditionals explicitly
+      stats        : options.stats  // console output following build
     })
 
     // before compile
@@ -75,11 +77,15 @@ function common(configurator, options) {
     // supported file types
     .loader('css', {
       test  : /\.css$/i,
-      loader: ExtractTextPlugin.extract('css?minimize&sourceMap!resolve-url?sourceMap')
+      loader: ExtractTextPlugin.extract('css?minimize&sourceMap!resolve-url?sourceMap', {
+        id: 'css'
+      })
     })
     .loader('sass', {
       test  : /\.scss$/i,
-      loader: ExtractTextPlugin.extract('css?minimize&sourceMap!resolve-url?sourceMap!sass?sourceMap')
+      loader: ExtractTextPlugin.extract('css?minimize&sourceMap!resolve-url?sourceMap!sass?sourceMap', {
+        id: 'css'
+      })
     })
     .loader('image', {
       test   : /\.(jpe?g|png|gif|svg)([#?].*)?$/i,
@@ -151,8 +157,8 @@ function common(configurator, options) {
 
     // output, chunking, optimisation
     //  https://github.com/webpack/webpack/issues/1315#issuecomment-139930039
-    .plugin('extract-text', ExtractTextPlugin, [
-      undefined,
+    .plugin('extract-text-css', ExtractTextPlugin, [
+      'css',
       '[name].[md5:contenthash:hex:20].css',
       {allChunks: true}
     ])
