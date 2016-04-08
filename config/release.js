@@ -29,17 +29,20 @@ function release(factory, options) {
   }
 
   function eachComposition(composition) {
-    var releaseDir = path.join(options.releaseDir, composition.directory);
+    var releaseDir = path.join(options.releaseDir, composition.directory),
+        hashHtml   = appFilter(options.hashHtml)(composition),
+        minify     = !appFilter(options.unminified)(composition);
+
     return factory()
       .addClean(releaseDir)
-      .addComposition(composition, options.publicPath)
+      .addComposition(composition, hashHtml)
       .addConditionals({
         TEST   : false,
         DEBUG  : false,
         RELEASE: true
       })
       .addExternalChunkManifest()
-      .addMinification(!options.unminified)
+      .addMinification(minify)
       .merge({
         name  : composition.namespace.join('.'),
         output: {

@@ -9,10 +9,12 @@
 function test(configurator, options) {
 
   // lazy import packages
-  var path = require('path');
+  var path      = require('path'),
+      appFilter = require('../lib/app-filter');
 
   // generate an entry file for all tests
-  var testEntry = path.resolve(options.appDir, 'test.js');
+  var testEntry = path.resolve(options.appDir, 'test.js'),
+      minify    = !appFilter(options.unminified)({namespace: 'test'});
 
   return configurator
     .addClean(options.testDir)
@@ -22,6 +24,7 @@ function test(configurator, options) {
       RELEASE: false
     })
     .addTestSuiteGeneration(testEntry, options.testGlob)
+    .addMinification(minify)
     .merge({
       name  : 'test',
       entry : {

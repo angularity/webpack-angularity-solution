@@ -27,15 +27,18 @@ function app(factory, options) {
 
   function eachComposition(composition, i) {
     var buildDir = path.join(options.buildDir, composition.directory),
-        config   = factory()
+        hashHtml = appFilter(options.hashHtml)(composition),
+        minify   = !appFilter(options.unminified)(composition);
+
+    var config = factory()
           .addClean(buildDir)
-          .addComposition(composition)
+          .addComposition(composition, hashHtml)
           .addConditionals({
             TEST   : false,
             DEBUG  : true,
             RELEASE: false
           })
-          .addMinification(!options.unminified)
+          .addMinification(minify)
           .merge({
             name  : composition.namespace.join('.'),
             output: {

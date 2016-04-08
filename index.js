@@ -11,8 +11,9 @@ const DEFAULT_OPTIONS = {
   releaseDir: './app-release',
   testGlob  : '**/*.spec.js',
   port      : 55555,
-  unminified: false,
   names     : 'app*, release',
+  hashHtml  : 'release*',
+  unminified: 'test',
   publicPath: undefined,
   globals   : {},
   stats     : {
