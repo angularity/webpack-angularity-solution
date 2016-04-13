@@ -31,20 +31,20 @@ function app(factory, options) {
         minify   = !appFilter(options.unminified)(composition);
 
     var config = factory()
-          .addClean(buildDir)
-          .addComposition(composition, hashHtml)
-          .addConditionals({
-            TEST   : false,
-            DEBUG  : true,
-            RELEASE: false
-          })
-          .addMinification(minify)
-          .merge({
-            name  : composition.namespace.join('.'),
-            output: {
-              path: path.resolve(buildDir)
-            }
-          });
+      .addClean(buildDir)
+      .addComposition(composition, hashHtml)
+      .addConditionals({
+        TEST   : false,
+        DEBUG  : true,
+        RELEASE: false
+      })
+      .addMinification(minify)
+      .merge({
+        name  : composition.namespace.join('.'),
+        output: {
+          path: path.resolve(buildDir)
+        }
+      });
 
     // we only need to create a server for the base composition
     return (i === 0) ? config.addBrowserSync(buildDir, options.port) : config;
