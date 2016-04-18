@@ -44,8 +44,6 @@ function common(configurator, options) {
         vendor: vendorEntry
       },
       output       : {
-        filename                             : '[name].[chunkhash].js',
-        chunkFilename                        : '[name].[chunkhash].js',
         devtoolModuleFilenameTemplate        : templateFn,
         devtoolFallbackModuleFilenameTemplate: templateFn
       },

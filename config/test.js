@@ -31,7 +31,9 @@ function test(configurator, options) {
         test: testEntry
       },
       output: {
-        path: path.resolve(options.testDir)
+        filename     : '[name].js',
+        chunkFilename: '[name].js',
+        path         : path.resolve(options.testDir)
       }
     });
 }

@@ -42,7 +42,9 @@ function app(factory, options) {
       .merge({
         name  : composition.namespace.join('.'),
         output: {
-          path: path.resolve(buildDir)
+          filename     : '[name].[chunkhash].js',
+          chunkFilename: '[name].[chunkhash].js',
+          path         : path.resolve(buildDir)
         }
       });
 
