@@ -118,10 +118,7 @@ function common(configurator, options) {
     .loader('js-bower', {
       test   : /\.js$/i,
       include: /[\\\/]bower_components[\\\/]/i,
-      loaders: [
-        'adjust-sourcemap?format=outputRelative',
-        'ng-annotate?sourceMap'
-      ]
+      loader: 'ng-annotate?sourceMap'
     })
     .loader('js', {
       test   : /\.js$/i,
