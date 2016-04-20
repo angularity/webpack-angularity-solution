@@ -10,6 +10,7 @@ function common(configurator, options) {
 
   // lazy import packages
   var path                  = require('path'),
+      fs                    = require('fs'),
       webpack               = require('webpack'),
       adjustSourcemapLoader = require('adjust-sourcemap-loader'),
       ExtractTextPlugin     = require('extract-text-webpack-plugin'),
@@ -147,7 +148,7 @@ function common(configurator, options) {
       EntryGeneratorPlugin.bowerDependenciesSource()
     ])
     .plugin('omit-tilde', OmitTildePlugin, [{
-      include  : ['package.json', 'bower.json'],
+      include  : ['package.json', 'bower.json'].filter(checkExists),
       deprecate: true
     }])
     .plugin('bower', BowerWebpackPlugin, [{
@@ -170,6 +171,10 @@ function common(configurator, options) {
       minChunks: Infinity
     }])
     .plugin('order-and-hash', OrderAndHashPlugin);
+
+  function checkExists(file) {
+    return fs.existsSync(path.resolve(file));
+  }
 }
 
 module.exports = common;
