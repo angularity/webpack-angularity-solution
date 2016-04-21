@@ -28,10 +28,8 @@ function common(configurator, options) {
 
   // make a regexp that excludes everything in the app directory
   //  this is important to ensure some loaders do not overlap
-  var appRegExpSrc = path.resolve(options.appDir)
-    .replace(/[\\\/]?$/g, '[\\\\\\/]')  // escape path separator
-    .replace(/\./g, '\.');              // escape period
-  var appRexExp = new RegExp(appRegExpSrc);
+  var appRegExpSrc = '^' + (path.resolve(options.appDir).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')),
+      appRexExp    = new RegExp(appRegExpSrc);
 
   // Note that DedupePlugin causes problems when npm linked so we will ommit it from the common configuration
   // you need to add it yourself if you wish to use it
@@ -117,7 +115,7 @@ function common(configurator, options) {
     .loader('js-bower', {
       test   : /\.js$/i,
       include: /[\\\/]bower_components[\\\/]/i,
-      loader: 'ng-annotate?sourceMap'
+      loader : 'ng-annotate?sourceMap'
     })
     .loader('js', {
       test   : /\.js$/i,
