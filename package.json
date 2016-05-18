@@ -1,6 +1,6 @@
 {
   "name": "webpack-angularity-solution",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Requisite configuration and modules to build Angularity projects with Webpack",
   "main": "index.js",
   "repository": {
@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/angularity/webpack-angularity-solution",
   "dependencies": {
-    "adjust-sourcemap-loader": "~0.1.1",
+    "adjust-sourcemap-loader": "~1.0.0",
     "babel-core": "~6.4.5",
     "babel-loader": "~6.2.1",
     "bower-webpack-plugin": "~0.1.9",

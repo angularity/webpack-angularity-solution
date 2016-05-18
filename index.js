@@ -14,6 +14,7 @@ const DEFAULT_OPTIONS = {
   names     : 'app*, release',
   hashHtml  : 'release*',
   unminified: 'test',
+  legacy    : true,
   publicPath: undefined,
   globals   : {},
   stats     : {
@@ -51,6 +52,7 @@ const OPERATORS = {
 module.exports = multiConfigurator(DEFAULT_OPTIONS, configuratorFactory(OPERATORS))
   .define('common')
     .append(require('./config/common'))
+    .append(require('./config/legacy'))
   .define('app')
     .generate(require('./config/app'))
     .append('common')

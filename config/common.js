@@ -10,13 +10,11 @@ function common(configurator, options) {
 
   // lazy import packages
   var path                  = require('path'),
-      fs                    = require('fs'),
       webpack               = require('webpack'),
       adjustSourcemapLoader = require('adjust-sourcemap-loader'),
       ExtractTextPlugin     = require('extract-text-webpack-plugin'),
       BowerWebpackPlugin    = require('bower-webpack-plugin'),
       EntryGeneratorPlugin  = require('entry-generator-webpack-plugin'),
-      OmitTildePlugin       = require('omit-tilde-webpack-plugin'),
       OrderAndHashPlugin    = require('../lib/order-and-hash-plugin');
 
   // calculated values
@@ -49,12 +47,14 @@ function common(configurator, options) {
       resolve      : {
         // do not use root as we want node_modules in linked projects to take precedence
         modulesDirectories: ['node_modules', 'bower_components'],
-        fallback          : [path.resolve('node_modules'), path.resolve('bower_components')]
+        fallback          : [path.resolve('node_modules'), path.resolve('bower_components')],
+        unsafeCache       : true
       },
       resolveLoader: {
         // do not use root as we want node_modules in linked projects to take precedence
         modulesDirectories: ['node_modules'],
-        fallback          : [loaderRoot, path.resolve('node_modules')]
+        fallback          : [loaderRoot, path.resolve('node_modules')],
+        unsafeCache       : true
       },
       node         : {
         fs: 'empty'
@@ -121,13 +121,10 @@ function common(configurator, options) {
       test   : /\.js$/i,
       exclude: /[\\\/](bower_components|webpack|css-loader)[\\\/]/i,
       loaders: [
-        'ng-annotate?sourceMap',
-        // fix ng-annotate source maps in Windows but using absolute paths in incoming source-map
-        'adjust-sourcemap?format=absolute',
-        'nginject?sourceMap&deprecate&singleQuote',
         // https://github.com/feross/buffer/issues/79
         // http://stackoverflow.com/a/29857361/5535360
-        'babel?sourceMap&ignore=buffer&compact=false'
+        'babel?sourceMap&ignore=buffer&compact=false&cacheDirectory=.babel',
+        'ng-annotate?sourceMap'
       ]
     })
     .loader('html', {
@@ -145,10 +142,6 @@ function common(configurator, options) {
       vendorEntry,
       EntryGeneratorPlugin.bowerDependenciesSource()
     ])
-    .plugin('omit-tilde', OmitTildePlugin, [{
-      include  : ['package.json', 'bower.json'].filter(checkExists),
-      deprecate: true
-    }])
     .plugin('bower', BowerWebpackPlugin, [{
       includes                       : /\.((js|css)|(jpe?g|png|gif|svg|ico)|(woff2?|eot|ttf|otf)([#?].*)?)$/i,
       searchResolveModulesDirectories: false
@@ -169,10 +162,6 @@ function common(configurator, options) {
       minChunks: Infinity
     }])
     .plugin('order-and-hash', OrderAndHashPlugin);
-
-  function checkExists(file) {
-    return fs.existsSync(path.resolve(file));
-  }
 }
 
 module.exports = common;
