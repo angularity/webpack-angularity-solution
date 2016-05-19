@@ -14,27 +14,36 @@ function legacy(configurator, options) {
     // lazy import packages
     var path            = require('path'),
         fs              = require('fs'),
-        OmitTildePlugin = require('omit-tilde-webpack-plugin');
+        OmitTildePlugin = require('omit-tilde-webpack-plugin'),
+        test            = require('../lib/test-file-path');
 
     /* jshint validthis:true */
     return configurator
+
       .plugin('omit-tilde', OmitTildePlugin, [{
         test     : /\.s?css$/,
         include  : ['package.json', 'bower.json'].filter(checkExists),
         deprecate: true
       }])
+
+      // IMPORTANT:
+      // * Must not process webpack loaders when encountered (e.g. css-loader)
+      // * Specify the name of each loader in full (e.g. use 'css-loader' not 'css')
+      //   otherwise you will get false matches (e.g. 'jshint' package will be confused with 'jshint-loader')
+      //   this is mainly a problem ig you have sym-linked packages in your actual project
+
       .removeLoader('js')
       .loader('js', {
         test   : /\.js$/i,
-        exclude: /[\\\/](bower_components|webpack|css-loader)[\\\/]/i,
+        exclude: test.any(test.directory('bower_components'), test.nodeModule('webpack'), test.nodeModule(/-loader$/)),
         loaders: [
-          'ng-annotate?sourceMap',
+          'ng-annotate-loader?sourceMap',
           // fix ng-annotate source maps in Windows but using absolute paths in incoming source-map
-          'adjust-sourcemap?format=absolute',
-          'nginject?sourceMap&deprecate&singleQuote',
+          'adjust-sourcemap-loader?format=absolute',
+          'nginject-loader?sourceMap&deprecate&singleQuote',
           // https://github.com/feross/buffer/issues/79
           // http://stackoverflow.com/a/29857361/5535360
-          'babel?sourceMap&ignore=buffer&compact=false&cacheDirectory=.babel'
+          'babel-loader?sourceMap&ignore=buffer&compact=false&cacheDirectory=.babel'
         ]
       });
   }

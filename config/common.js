@@ -15,7 +15,8 @@ function common(configurator, options) {
       ExtractTextPlugin     = require('extract-text-webpack-plugin'),
       BowerWebpackPlugin    = require('bower-webpack-plugin'),
       EntryGeneratorPlugin  = require('entry-generator-webpack-plugin'),
-      OrderAndHashPlugin    = require('../lib/order-and-hash-plugin');
+      OrderAndHashPlugin    = require('../lib/order-and-hash-plugin'),
+      test                  = require('../lib/test-file-path');
 
   // calculated values
   var vendorEntry = path.resolve(options.appDir, 'vendor.js'),
@@ -24,12 +25,7 @@ function common(configurator, options) {
         format: 'projectRelative'
       });
 
-  // make a regexp that excludes everything in the app directory
-  //  this is important to ensure some loaders do not overlap
-  var appRegExpSrc = '^' + (path.resolve(options.appDir).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')),
-      appRexExp    = new RegExp(appRegExpSrc);
-
-  // Note that DedupePlugin causes problems when npm linked so we will ommit it from the common configuration
+  // Note that DedupePlugin causes problems when npm linked so we will omit it from the common configuration
   // you need to add it yourself if you wish to use it
   //  https://github.com/webpack/karma-webpack/issues/41#issuecomment-139516692
   return configurator
@@ -64,77 +60,85 @@ function common(configurator, options) {
       stats        : options.stats  // console output following build
     })
 
+    // IMPORTANT:
+    // * Must not process webpack loaders when encountered (e.g. css-loader)
+    // * Specify the name of each loader in full (e.g. use 'css-loader' not 'css')
+    //   otherwise you will get false matches (e.g. 'jshint' package will be confused with 'jshint-loader')
+    //   this is mainly a problem ig you have sym-linked packages in your actual project
+
     // before compile
     .preLoader('linting', {
       test   : /\.js$/i,
-      exclude: /[\\\/](node_modules|bower_components)[\\\/]/i,
-      loader : 'jshint'
+      exclude: test.any(test.directory('node_modules'), test.directory('bower_components'), test.directory('..')),
+      loader : 'jshint-loader'
     })
 
     // some obscure modules like to 'require()' angular, but bower angular does not export anything
     .loader('export-angular', {
       test   : /[\\\/]angular\.js$/i,
       include: /[\\\/]bower_components[\\\/]angular[\\\/]/i,
-      loader : 'exports?angular'
+      loader : 'exports-loader?angular'
     })
 
     // supported file types
     .loader('css', {
       test  : /\.css$/i,
-      loader: ExtractTextPlugin.extract('css?minimize&sourceMap!resolve-url?sourceMap', {
-        id: 'css'
-      })
+      loader: ExtractTextPlugin.extract(
+        'css-loader?minimize&sourceMap!resolve-url-loader?sourceMap', {
+          id: 'css'
+        })
     })
     .loader('sass', {
       test  : /\.scss$/i,
-      loader: ExtractTextPlugin.extract('css?minimize&sourceMap!resolve-url?sourceMap!sass?sourceMap', {
-        id: 'css'
-      })
+      loader: ExtractTextPlugin.extract(
+        'css-loader?minimize&sourceMap!resolve-url-loader?sourceMap!sass-loader?sourceMap', {
+          id: 'css'
+        })
     })
     .loader('image', {
       test   : /\.(jpe?g|png|gif|svg)([#?].*)?$/i,
       loaders: [
-        'file?name=[md5:hash:hex:20].[ext]',
-        'image-webpack?optimizationLevel=7&interlaced=false'
+        'file-loader?name=[md5:hash:hex:20].[ext]',
+        'image-webpack-loader?optimizationLevel=7&interlaced=false'
       ]
     })
     .loader('icon', {
       test   : /\.ico([#?].*)?$/i,
       loaders: [
-        'file?name=[md5:hash:hex:20].[ext]'
+        'file-loader?name=[md5:hash:hex:20].[ext]'
       ]
     })
     .loader('font', {
       test  : /\.(eot|ttf|otf)([#?].*)?$/i,
-      loader: 'file?name=[md5:hash:hex:20].[ext]'
+      loader: 'file-loader?name=[md5:hash:hex:20].[ext]'
     })
     .loader('woff', {   // NB: I coppied this from somewhere, not sure why we would embed woff and not other fonts
       test  : /\.woff2?([#?].*)?$/i,
-      loader: 'url?limit=10000&mimetype=application/font-woff&name=[md5:hash:hex:20].[ext]'
+      loader: 'url-loader?limit=10000&mimetype=application/font-woff&name=[md5:hash:hex:20].[ext]'
     })
     .loader('js-bower', {
       test   : /\.js$/i,
       include: /[\\\/]bower_components[\\\/]/i,
-      loader : 'ng-annotate?sourceMap'
+      loader : 'ng-annotate-loader?sourceMap'
     })
     .loader('js', {
       test   : /\.js$/i,
-      exclude: /[\\\/](bower_components|webpack|css-loader)[\\\/]/i,
+      exclude: test.any(test.directory('bower_components'), test.nodeModule('webpack'), test.nodeModule(/-loader$/)),
       loaders: [
         // https://github.com/feross/buffer/issues/79
         // http://stackoverflow.com/a/29857361/5535360
-        'babel?sourceMap&ignore=buffer&compact=false&cacheDirectory=.babel',
-        'ng-annotate?sourceMap'
+        'babel-loader?sourceMap&ignore=buffer&compact=false&cacheDirectory=.babel',
+        'ng-annotate-loader?sourceMap'
       ]
     })
     .loader('html', {
       test   : /\.html?$/i,
-      exclude: appRexExp,
-      loader : 'html?interpolate&removeComments=false&attrs=img:src link:href'
+      exclude: test.directory(options.appDir),
+      loader : 'html-loader?interpolate&removeComments=false&attrs=img:src link:href'
     })
     .loader('json', {
       test  : /\.json$/i,
-      loader: 'json'
+      loader: 'json-loader'
     })
 
     // bower
