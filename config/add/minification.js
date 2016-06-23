@@ -15,7 +15,7 @@ function minification(enabled) {
   if (enabled) {
     this
       .plugin('minification', ESManglePlugin, [{
-        exclude: /(test|indexhtml).\w+.js$/i
+        exclude: /(test|indexhtml).\w+.js$/i  // breakage occurs if we don't exclude entry points for index.html, test
       }]);
   }
   return this;

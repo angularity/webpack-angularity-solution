@@ -20,10 +20,12 @@ function common(configurator, options) {
 
   // calculated values
   var vendorEntry = path.resolve(options.appDir, 'vendor.js'),
-      loaderRoot  = path.resolve(__dirname, '..', 'node_modules'),
-      templateFn  = adjustSourcemapLoader.moduleFilenameTemplate({
-        format: 'projectRelative'
-      });
+      loaderRoot  = path.resolve(__dirname, '..', 'node_modules');
+
+  // final source-map sources should be project relative paths
+  var templateFn = adjustSourcemapLoader.moduleFilenameTemplate({
+    format: 'projectRelative'
+  });
 
   // Note that DedupePlugin causes problems when npm linked so we will omit it from the common configuration
   // you need to add it yourself if you wish to use it
@@ -41,18 +43,18 @@ function common(configurator, options) {
         devtoolFallbackModuleFilenameTemplate: templateFn
       },
       resolve      : {
-        // do not use root as we want node_modules in linked projects to take precedence
+        // do not use resolve.root as we want node_modules in linked projects to take precedence
         modulesDirectories: ['node_modules', 'bower_components'],
         fallback          : [path.resolve('node_modules'), path.resolve('bower_components')],
         unsafeCache       : true
       },
       resolveLoader: {
-        // do not use root as we want node_modules in linked projects to take precedence
+        // do not use resolveLoader.root as we want node_modules in linked projects to take precedence
         modulesDirectories: ['node_modules'],
         fallback          : [loaderRoot, path.resolve('node_modules')],
         unsafeCache       : true
       },
-      node         : {
+      node         : {              // allow useful node packages to be consumed in your project
         fs: 'empty'
       },
       debug        : true,          // don't imply additional optimisations, we will add them explicitly
@@ -61,10 +63,10 @@ function common(configurator, options) {
     })
 
     // IMPORTANT:
-    // * Must not process webpack loaders when encountered (e.g. css-loader)
-    // * Specify the name of each loader in full (e.g. use 'css-loader' not 'css')
-    //   otherwise you will get false matches (e.g. 'jshint' package will be confused with 'jshint-loader')
-    //   this is mainly a problem ig you have sym-linked packages in your actual project
+    // * Must not load webpack loaders themselves (e.g. css-loader is commonly encountered)
+    // * Below we must specify the name of each loader in full (e.g. use 'css-loader') do not use the short form
+    //   (e.g. 'css') otherwise you will get false matches (e.g. 'jshint' package will be confused with 'jshint-loader')
+    //   this is mainly a problem if you have sym-linked packages in your actual project
 
     // before compile
     .preLoader('linting', {
@@ -165,6 +167,9 @@ function common(configurator, options) {
       name     : 'vendor',
       minChunks: Infinity
     }])
+
+    // in order for long-term-caching to work the chunk hashes must not change when their content changes
+    //  there is a sensitivity between file order and hashing so we just do both in one plugin of our own making
     .plugin('order-and-hash', OrderAndHashPlugin);
 }
 

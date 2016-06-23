@@ -39,12 +39,12 @@ function composition(item, useHash) {
       'indexhtml.html'
     ])
 
-    // there are few options for index.html that are compatible with long term caching
+    // there are very few options for index.html that are compatible with long term caching
     //  https://github.com/webpack/webpack/issues/1315#issuecomment-171896778
     .plugin('index-html', HtmlWebpackPlugin, [{
       filename       : 'index.html',
       excludeChunks  : ['manifest', 'indexhtml'],
-      templateContent: htmlTemplateContent('indexhtml', useHash),
+      templateContent: htmlTemplateContent('indexhtml', useHash), // custom html template with support for inject tag
       minify         : false,
       inject         : false
     }]);
